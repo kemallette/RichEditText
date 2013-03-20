@@ -2,21 +2,25 @@ package com.RichEditText.Widget;
 
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.RichEditText.Validations.Validator;
 
-/**
- * EditText Extension to be used in order to create forms in android.
- * 
- */
 public class RichEditText extends EditText{
+
+	private static final String	TAG	= "RichEditText";
+
+	private Context	            ctx;
+
 
 	public RichEditText(Context context){
 
 		super(context);
-		// FIXME how should this constructor be handled
+
+		ctx = context;
 	}
 
 
@@ -24,9 +28,14 @@ public class RichEditText extends EditText{
 
 		super(context,
 		      attrs);
+
+		ctx = context;
+
 		editTextValidator = new DefaultEditTextValidator(this,
 		                                                 attrs,
-		                                                 context);
+		                                                 ctx);
+
+		setFont(attrs);
 	}
 
 
@@ -35,10 +44,39 @@ public class RichEditText extends EditText{
 		super(context,
 		      attrs,
 		      defStyle);
+
+		ctx = context;
+
 		editTextValidator = new DefaultEditTextValidator(this,
 		                                                 attrs,
 		                                                 context);
+		setFont(attrs);	
+	}
 
+
+	private void setFont(AttributeSet attrs){
+
+		String fontName = null;
+
+		for (int i = 0; i < attrs.getAttributeCount(); i++) {
+			fontName =
+			           attrs.getAttributeValue("http://schemas.android.com/apk/res/com.RichEditText.Demo",
+			                                   "fontName");
+			Log.i(TAG, "Attribute\n Name: " + attrs.getAttributeName(i) + "\n Value: " + attrs.getAttributeValue(i));
+		}
+
+		if (fontName != null && !isInEditMode()){ // editMode is used in Eclipse/dev tools to draw views in layout
+			                  // builders.
+
+			Typeface mtf = WidgetUtil.get(ctx.getApplicationContext(),
+			                              fontName);
+
+			if (mtf != null)
+				setTypeface(mtf);
+			else
+				Log.e(TAG,
+				      "Couldn't set the typeface in edit mode (something went wrong in eclipse layout builder)");
+		}
 	}
 
 

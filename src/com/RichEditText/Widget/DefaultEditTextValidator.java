@@ -35,7 +35,7 @@ public class DefaultEditTextValidator implements EditTextValidator
 
 	public DefaultEditTextValidator( EditText editText, AttributeSet attrs, Context context )
 	{
-		TypedArray typedArray = context.obtainStyledAttributes( attrs, R.styleable.RichEditText);
+		TypedArray typedArray = editText.getContext().obtainStyledAttributes( attrs, R.styleable.RichEditText);
 		emptyAllowed = typedArray.getBoolean( R.styleable.RichEditText_emptyAllowed, false );
 		testType = typedArray.getInt( R.styleable.RichEditText_testType, EditTextValidator.TEST_NOCHECK );
 		testErrorString = typedArray.getString( R.styleable.RichEditText_testErrorString );
