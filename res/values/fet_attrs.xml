@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<declare-styleable name="FormEditText">
+	<declare-styleable name="RichEditText">
 		<attr name="testType">
 			<enum name="regexp" value="0" />
 			<enum name="numeric" value="1" />

@@ -11,7 +11,7 @@ import com.RichEditText.Validations.Validator;
  */
 public interface EditTextValidator {
 	/**
-	 * Add a validator to this FormEditText. The validator will be added in the
+	 * Add a validator to this RichEditText. The validator will be added in the
 	 * queue of the current validators.
 	 * 
 	 * @param theValidator

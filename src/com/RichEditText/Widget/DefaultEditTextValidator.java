@@ -35,13 +35,13 @@ public class DefaultEditTextValidator implements EditTextValidator
 
 	public DefaultEditTextValidator( EditText editText, AttributeSet attrs, Context context )
 	{
-		TypedArray typedArray = context.obtainStyledAttributes( attrs, R.styleable.FormEditText );
-		emptyAllowed = typedArray.getBoolean( R.styleable.FormEditText_emptyAllowed, false );
-		testType = typedArray.getInt( R.styleable.FormEditText_testType, EditTextValidator.TEST_NOCHECK );
-		testErrorString = typedArray.getString( R.styleable.FormEditText_testErrorString );
-		classType = typedArray.getString( R.styleable.FormEditText_classType );
-		customRegexp = typedArray.getString( R.styleable.FormEditText_customRegexp );
-		emptyErrorString = typedArray.getString( R.styleable.FormEditText_emptyErrorString );
+		TypedArray typedArray = context.obtainStyledAttributes( attrs, R.styleable.RichEditText);
+		emptyAllowed = typedArray.getBoolean( R.styleable.RichEditText_emptyAllowed, false );
+		testType = typedArray.getInt( R.styleable.RichEditText_testType, EditTextValidator.TEST_NOCHECK );
+		testErrorString = typedArray.getString( R.styleable.RichEditText_testErrorString );
+		classType = typedArray.getString( R.styleable.RichEditText_classType );
+		customRegexp = typedArray.getString( R.styleable.RichEditText_customRegexp );
+		emptyErrorString = typedArray.getString( R.styleable.RichEditText_emptyErrorString );
 		typedArray.recycle();
 
 		this.editText = editText;

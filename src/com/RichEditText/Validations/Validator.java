@@ -3,7 +3,7 @@ package com.RichEditText.Validations;
 import android.widget.EditText;
 
 /**
- * Validator abstract class. To be used with FormEditText 
+ * Validator abstract class. To be used with RichEditText 
  * @author Andrea Baccega <me@andreabaccega.com>
  *
  */
