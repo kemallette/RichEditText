@@ -5,37 +5,29 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 
+import com.RichEditText.R;
 import com.RichEditText.Validations.Validator;
 
-public class RichEditText extends EditText{
+
+public class RichEditText extends RelativeLayout implements OnClickListener{
 
 	private static final String	TAG	= "RichEditText";
 
-	private Context	            ctx;
+	private EditText	        mEt;
+	private ImageView	        mClearButton;
+	private EditTextValidator	editTextValidator;
 
 
 	public RichEditText(Context context){
 
 		super(context);
-
-		ctx = context;
-	}
-
-
-	public RichEditText(Context context, AttributeSet attrs){
-
-		super(context,
-		      attrs);
-
-		ctx = context;
-
-		editTextValidator = new DefaultEditTextValidator(this,
-		                                                 attrs,
-		                                                 ctx);
-
-		setFont(attrs);
 	}
 
 
@@ -45,12 +37,69 @@ public class RichEditText extends EditText{
 		      attrs,
 		      defStyle);
 
-		ctx = context;
+		initViews(attrs);
+	}
 
-		editTextValidator = new DefaultEditTextValidator(this,
+
+	public RichEditText(Context context, AttributeSet attrs){
+
+		super(context,
+		      attrs);
+
+		initViews(attrs);
+
+	}
+
+
+	@Override
+	public void onClick(View v){
+
+		if (v.getId() == mClearButton.getId()){
+			mEt.setText("");
+		}
+	}
+
+
+	private void initViews(AttributeSet attrs){
+
+		mEt = new EditText(getContext(),
+		                   attrs);
+		mEt.setId(R.id.et);
+
+		mClearButton = new ImageView(getContext(),
+		                             attrs);
+		mClearButton.setId(R.id.clear);
+		mClearButton.setOnClickListener(this);
+		mClearButton.setImageResource(android.R.drawable.ic_delete);
+		mClearButton.setAdjustViewBounds(true);
+		mClearButton.setScaleType(ScaleType.FIT_CENTER);
+
+		RelativeLayout.LayoutParams mEtParams =
+		                                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+		                                                                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams mClearButtonParams =
+		                                                 new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+		                                                                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
+		mEtParams.addRule(RelativeLayout.LEFT_OF,
+		                  mClearButton.getId());
+		mClearButtonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,
+		                           mClearButton.getId());
+		mClearButtonParams.addRule(RelativeLayout.ALIGN_TOP,
+		                           mEt.getId());
+		mClearButtonParams.addRule(RelativeLayout.ALIGN_BOTTOM,
+		                           mEt.getId());
+
+
+		addView(mClearButton,
+		        mClearButtonParams);
+		addView(mEt,
+		        mEtParams);
+
+		editTextValidator = new DefaultEditTextValidator(mEt,
 		                                                 attrs,
-		                                                 context);
-		setFont(attrs);	
+		                                                 getContext());
+
+		setFont(attrs);
 	}
 
 
@@ -58,21 +107,24 @@ public class RichEditText extends EditText{
 
 		String fontName = null;
 
-		for (int i = 0; i < attrs.getAttributeCount(); i++) {
+		for (int i = 0; i < attrs.getAttributeCount(); i++){
 			fontName =
-			           attrs.getAttributeValue("http://schemas.android.com/apk/res/com.RichEditText.Demo",
+			           attrs.getAttributeValue("http://schemas.android.com/apk/res/com.RichEditText",
 			                                   "fontName");
-			Log.i(TAG, "Attribute\n Name: " + attrs.getAttributeName(i) + "\n Value: " + attrs.getAttributeValue(i));
+			Log.i(TAG,
+			      "Attribute\n Name: " + attrs.getAttributeName(i)
+			          + "\n Value: " + attrs.getAttributeValue(i));
 		}
 
-		if (fontName != null && !isInEditMode()){ // editMode is used in Eclipse/dev tools to draw views in layout
-			                  // builders.
+		if (fontName != null && !isInEditMode()){ // editMode is used in Eclipse/dev tools to draw
+			                                      // views in layout
+			// builders.
 
-			Typeface mtf = WidgetUtil.get(ctx.getApplicationContext(),
+			Typeface mtf = WidgetUtil.get(getContext().getApplicationContext(),
 			                              fontName);
 
 			if (mtf != null)
-				setTypeface(mtf);
+				mEt.setTypeface(mtf);
 			else
 				Log.e(TAG,
 				      "Couldn't set the typeface in edit mode (something went wrong in eclipse layout builder)");
@@ -118,6 +170,5 @@ public class RichEditText extends EditText{
 		return editTextValidator.testValidity();
 	}
 
-	private EditTextValidator	editTextValidator;
 
 }

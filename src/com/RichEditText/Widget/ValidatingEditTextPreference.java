@@ -20,8 +20,6 @@ import android.widget.TextView.OnEditorActionListener;
 public class ValidatingEditTextPreference extends EditTextPreference {
 	public ValidatingEditTextPreference(Context context) {
 		super(context);
-		// FIXME how should this constructor be handled
-		throw new RuntimeException("Not supported");
 	}
 
 	public ValidatingEditTextPreference(Context context, AttributeSet attrs) {

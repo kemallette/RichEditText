@@ -58,6 +58,13 @@ public class WidgetUtil{
 	}
 
 
+	public static float getScreenDensity(Context ctx){
+
+		return ctx.getResources()
+		          .getDisplayMetrics().density;
+	}
+
+
 	public static int convertToDips(Context ctx, float pixels){
 
 		// Get the screen's density scale
