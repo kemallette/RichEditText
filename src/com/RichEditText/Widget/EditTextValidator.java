@@ -35,12 +35,12 @@ public interface EditTextValidator {
 	public void resetValidators(Context context);
 
 	/**
-	 * Calling *testValidity()* will cause the EditText to go through
+	 * Calling *isValid()* will cause the EditText to go through
 	 * customValidators and call {@link #Validator.isValid(EditText)}
 	 * 
 	 * @return true if the validity passes false otherwise.
 	 */
-	public boolean testValidity();
+	public boolean isValid();
 
 	final int TEST_REGEXP = 0;
 

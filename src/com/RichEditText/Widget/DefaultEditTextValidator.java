@@ -365,13 +365,13 @@ public class DefaultEditTextValidator implements EditTextValidator{
 
 
 	/**
-	 * Calling *testValidity()* will cause the EditText to go through customValidators and call
+	 * Calling *isValid()* will cause the EditText to go through customValidators and call
 	 * {@link #Validator.isValid(EditText)}
 	 * 
 	 * @return true if the validity passes false otherwise.
 	 */
 	@Override
-	public boolean testValidity(){
+	public boolean isValid(){
 
 		boolean isValid = mValidator.isValid(editText);
 		if (!isValid){

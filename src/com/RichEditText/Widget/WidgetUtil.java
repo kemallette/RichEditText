@@ -34,8 +34,10 @@ public class WidgetUtil{
 				String[] otfFonts = res.getStringArray(R.array.otf_fonts);
 
 				for (String font : otfFonts){
-					if (font.equals("Dekar")){
+					if (name.equals(font)){
 						extension = ".otf";
+					}else{
+						extension = ".ttf";
 					}
 				}
 

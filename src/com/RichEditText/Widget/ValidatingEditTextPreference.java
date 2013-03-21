@@ -92,7 +92,7 @@ public class ValidatingEditTextPreference extends EditTextPreference {
 
 		public void performValidation() {
 			getEditText().setError(null);
-			if (editTextValidator.testValidity()) {
+			if (editTextValidator.isValid()) {
 				// Dismiss once everything is OK.
 				theDialog.dismiss();
 				ValidatingEditTextPreference.this.onClick(theDialog,

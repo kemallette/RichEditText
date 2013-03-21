@@ -22,6 +22,7 @@
         <attr name="emptyAllowed" format="boolean" />
         <attr name="classType" format="string" />
         <attr name="fontName" format="string" />
+        <attr name="showClearButton" format="boolean" />
     </declare-styleable>
 
 </resources>
