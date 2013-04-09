@@ -23,6 +23,7 @@
         <attr name="classType" format="string" />
         <attr name="fontName" format="string" />
         <attr name="showClearButton" format="boolean" />
+        <attr name="showFormattingOptions" format="boolean" />
     </declare-styleable>
 
 </resources>
