@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ret="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/fieldLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <com.RichEditText.Widget.RichEditTextField
+            android:id="@+id/editTextField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".95"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <ImageView
+            android:id="@+id/clearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight=".05"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:contentDescription="@string/clear_text_"
+            android:scaleType="fitStart"
+            android:src="@android:drawable/ic_delete" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/formattingOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fieldLayout" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ToggleButton
+                android:id="@+id/bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="B"
+                android:textOn="B"
+                android:textStyle="bold" />
+
+            <ToggleButton
+                android:id="@+id/italic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="I"
+                android:textOn="I"
+                android:textStyle="normal" />
+
+            <ToggleButton
+                android:id="@+id/underline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="U"
+                android:textOn="U"
+                android:textStyle="normal" />
+
+            <ToggleButton
+                android:id="@+id/strikethrough"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="Strike"
+                android:textOn="Strike"
+                android:textStyle="normal" />
+
+            <ToggleButton
+                android:id="@+id/bgColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="BgColor"
+                android:textOn="BgColor"
+                android:textStyle="normal" />
+
+            <ToggleButton
+                android:id="@+id/fgColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="FgColor"
+                android:textOn="FgColor"
+                android:textStyle="normal" />
+
+            <Button
+                android:id="@+id/sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subscrpt"
+                android:textStyle="normal" />
+
+            <Button
+                android:id="@+id/sup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/superscrpt"
+                android:textStyle="normal" />
+
+            <ToggleButton
+                android:id="@+id/bullet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="Bullet"
+                android:textOn="Bullet"
+                android:textStyle="normal" />
+
+            <ToggleButton
+                android:id="@+id/ordered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="OL"
+                android:textOn="OL"
+                android:textStyle="normal" />
+
+            <ToggleButton
+                android:id="@+id/alignLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="Left"
+                android:textOn="Normal"
+                android:textStyle="bold" />
+
+            <ToggleButton
+                android:id="@+id/alignCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="Center"
+                android:textOn="Center"
+                android:textStyle="bold" />
+
+            <ToggleButton
+                android:id="@+id/alignOpposite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="Opposite"
+                android:textOn="Opposite"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/smile1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":-)" />
+
+            <Button
+                android:id="@+id/smile2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":-(" />
+
+            <Button
+                android:id="@+id/smile3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":-D" />
+
+            <Button
+                android:id="@+id/clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/clear" />
+
+            <ToggleButton
+                android:id="@+id/test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</RelativeLayout>
