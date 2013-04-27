@@ -1,4 +1,7 @@
-This is a custom EditText library project which adds text formatting, validations and dynamic text formatting. 
+This is a custom EditText library project which adds text formatting, validations and dynamic text formatting
+
+This library supports SDK version 8 (Froyo-2.2) and up. 
+
 ### Text formatting 
 * bold
 * italic
@@ -25,3 +28,13 @@ _TODO: Paragraph formatting options such as ordered and unordered lists, tabs, l
 
 ### [Custom Fonts](https://github.com/kemallette/RichEditText/wiki/Custom-Fonts) 
 * .TTF and .OTF supported. Android doesn't support other font formats.  
+
+
+###Dependencies
+
+####Library
+* [Android Support Package](http://developer.android.com/tools/extras/support-library.html)
+* [Apache Commons Lang3.1](http://commons.apache.org/proper/commons-lang/userguide.html)
+
+####Demo
+* [Action Bar Sherlock](http://actionbarsherlock.com/)
