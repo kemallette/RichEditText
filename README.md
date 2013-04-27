@@ -1,4 +1,7 @@
-This is a custom EditText library project which adds text formatting, validations and dynamic text formatting. 
+This is a custom EditText library project which adds text formatting, validations and dynamic text formatting
+
+This library supports SDK version 8 (Froyo-2.2) and up. 
+
 ### Text formatting 
 * bold
 * italic
