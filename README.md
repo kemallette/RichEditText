@@ -27,10 +27,11 @@ _TODO: Paragraph formatting options such as ordered and unordered lists, tabs, l
 * .TTF and .OTF supported. Android doesn't support other font formats.  
 
 
-###Dependencies###
+###Dependencies
 
-####Library####
+####Library
 * [Android Support Package](http://developer.android.com/tools/extras/support-library.html)
 * [Apache Commons Lang3.1](http://commons.apache.org/proper/commons-lang/userguide.html)
-####Demo####
+
+####Demo
 * [Action Bar Sherlock](http://actionbarsherlock.com/)
