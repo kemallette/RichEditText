@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="4"
+        android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
     <application
@@ -14,13 +14,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.kemallette.RichEditTextDemo.MainActivity"
+            android:name="com.kemallette.RichEditTextDemo.Activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name="LayoutExampleActivity" />
+        <activity android:name="ProgrammaticActivity" />
+        <activity android:name="EmailOrCreditCard" />
+        <activity android:name="EditingExampleActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Preferences" >
         </activity>
     </application>
 
