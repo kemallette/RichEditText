@@ -22,12 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="LayoutExampleActivity" />
-        <activity android:name="ProgrammaticActivity" />
-        <activity android:name="EmailOrCreditCard" />
-        <activity android:name="EditingExampleActivity" />
+        <activity android:name="com.kemallette.RichEditTextDemo.Activity.LayoutExampleActivity" />
+        <activity android:name="com.kemallette.RichEditTextDemo.Activity.ProgrammaticActivity" />
+        <activity android:name="com.kemallette.RichEditTextDemo.Activity.EmailOrCreditCard" />
+        <activity android:name="com.kemallette.RichEditTextDemo.Activity.EditingExampleActivity" />
+        <activity android:name="com.kemallette.RichEditTextDemo.Activity.ValidationsExampleActivity" />
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.kemallette.RichEditTextDemo.Activity.SettingsActivity"
             android:label="Preferences" >
         </activity>
     </application>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="color_picker_hsvHeight">220dp</dimen>
+    <dimen name="color_picker_hsvWidth">220dp</dimen>
+    <dimen name="color_picker_hueWidth">30dp</dimen>
+    <dimen name="color_picker_spacer">8dp</dimen>
+
+</resources>

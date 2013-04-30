@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/color_picker_dialogView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <RelativeLayout
+        android:id="@+id/color_picker_viewContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/color_picker_spacer"
+        android:paddingLeft="@dimen/color_picker_spacer"
+        android:paddingRight="@dimen/color_picker_spacer"
+        android:paddingTop="@dimen/color_picker_spacer" >
+
+        <com.kemallette.RichEditText.ColorPicker.ColorPicker
+            android:id="@+id/color_picker_viewSatBri"
+            android:layout_width="@dimen/color_picker_hsvWidth"
+            android:layout_height="@dimen/color_picker_hsvHeight"
+            android:layerType="software" />
+
+        <ImageView
+            android:id="@+id/color_picker_viewHue"
+            android:layout_width="@dimen/color_picker_hueWidth"
+            android:layout_height="@dimen/color_picker_hsvHeight"
+            android:layout_marginLeft="@dimen/color_picker_spacer"
+            android:layout_toRightOf="@id/color_picker_viewSatBri"
+            android:scaleType="fitXY"
+            android:src="@drawable/color_picker_hue" />
+
+        <com.kemallette.RichEditText.ColorPicker.ColorPickerAlpha
+            android:id="@+id/color_picker_viewAlpha"
+            android:layout_width="@dimen/color_picker_hueWidth"
+            android:layout_height="@dimen/color_picker_hsvHeight"
+            android:layout_marginLeft="@dimen/color_picker_spacer"
+            android:layout_toRightOf="@id/color_picker_viewHue" />
+
+        <ImageView
+            android:id="@+id/color_picker_cursor"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:scaleType="matrix"
+            android:src="@drawable/color_picker_cursor" />
+
+        <ImageView
+            android:id="@+id/color_picker_cursorAlpha"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:scaleType="matrix"
+            android:src="@drawable/color_picker_cursor" />
+
+        <ImageView
+            android:id="@+id/color_picker_target"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:scaleType="matrix"
+            android:src="@drawable/color_picker_target" />
+
+        <LinearLayout
+            android:id="@+id/color_picker_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/color_picker_viewSatBri"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/color_picker_spacer"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:background="@drawable/color_picker_checkers_tiled" >
+
+                <View
+                    android:id="@+id/color_picker_warnaLama"
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
+                    android:background="#faa" />
+            </FrameLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/color_picker_spacer"
+                android:paddingRight="@dimen/color_picker_spacer"
+                android:src="@drawable/color_picker_arrow_right" />
+
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:background="@drawable/color_picker_checkers_tiled" >
+
+                <View
+                    android:id="@+id/color_picker_warnaBaru"
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
+                    android:background="#aaf" />
+            </FrameLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

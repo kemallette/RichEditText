@@ -2,15 +2,14 @@ package com.kemallette.RichEditText.Widget;
 
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.EditText;
 
 
-public class RichEditTextField extends EditText{
+public class RichEditTextField	extends
+								EditText{
 
-	private static final String	    TAG	= "RichEditTextField";
+	private static final String		TAG	= "RichEditTextField";
 
 
 	private SelectionChangeListener	selectionListener;
@@ -18,25 +17,28 @@ public class RichEditTextField extends EditText{
 
 	public RichEditTextField(final Context context){
 
-		this(context,
-		     null);
+		super(context);
+
+		throw new RuntimeException("This constructor isn't supported. Surely you have SOME attributes?");
 	}
 
 
-	public RichEditTextField(final Context context, final AttributeSet attrs){
+	public RichEditTextField(	final Context context,
+								final AttributeSet attrs){
 
-		this(context,
-		     attrs,
-		     -1);
+		this(	context,
+				attrs,
+				-1);
 	}
 
 
-	public RichEditTextField(final Context context, final AttributeSet attrs,
-	    final int defStyle){
+	public RichEditTextField(	final Context context,
+								final AttributeSet attrs,
+								final int defStyle){
 
-		super(context,
-		      attrs,
-		      defStyle);
+		super(	context,
+				attrs,
+				defStyle);
 
 
 	}
@@ -45,26 +47,25 @@ public class RichEditTextField extends EditText{
 	@Override
 	protected void onSelectionChanged(final int selStart, final int selEnd){
 
-		super.onSelectionChanged(selStart,
-		                         selEnd);
+		super.onSelectionChanged(	selStart,
+									selEnd);
 
-		if (selectionListener != null){
-			selectionListener.onSelectionChanged(selStart,
-			                                     selEnd);
-		}
+		if (selectionListener != null)
+			selectionListener.onSelectionChanged(	selStart,
+													selEnd);
 	}
 
 
 	@Override
 	public void setText(CharSequence text, BufferType type){
 
-		super.setText(text,
-		              type);
+		super.setText(	text,
+						type);
 	}
 
 
 	public void
-	    setOnSelectionChangedListener(final SelectionChangeListener selectionListener){
+		setOnSelectionChangedListener(final SelectionChangeListener selectionListener){
 
 		this.selectionListener = selectionListener;
 	}

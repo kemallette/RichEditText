@@ -30,6 +30,8 @@ import android.widget.TextView.BufferType;
 import android.widget.ToggleButton;
 
 import com.kemallette.RichEditText.R;
+import com.kemallette.RichEditText.ColorPicker.ColorPickerDialog;
+import com.kemallette.RichEditText.ColorPicker.ColorPickerDialog.ColorPickerListener;
 import com.kemallette.RichEditText.Text.FontSpan;
 import com.kemallette.RichEditText.Text.IParagraphSpan;
 import com.kemallette.RichEditText.Text.ISpan;
@@ -54,7 +56,8 @@ public class RichEditText	extends
 											RichTextWatcher,
 											TextWatcher,
 											SelectionChangeListener,
-											SpanTypes{
+											SpanTypes,
+											ColorPickerListener{
 
 	// Replaces the default edit text factory that produces editables
 	// which our custom editable and listener
@@ -87,15 +90,19 @@ public class RichEditText	extends
 
 
 	private int						selectionStart, selectionEnd,
-									selectionLength, selectionPosition,
-									bufferEnd;
+									selectionLength, selectionPosition;
+	/**
+	 * This is also the end position of a selection
+	 */
+	private int						cursorPosition;
 
 	private float					density;
 
 	private ISpan[]					appliedSpans, ajacentSpans;
 
 	// Styling Buttons
-	private Button					btnSuperScript, btnSubScript;
+	private Button					btnSuperScript, btnSubScript, btnFgPicker,
+									btnBgPicker;
 
 	// Styling Toggles
 	private ToggleButton			tgBold, tgItalic, tgUnderline,
@@ -150,14 +157,16 @@ public class RichEditText	extends
 				attrs,
 				defStyle);
 
-		editTextValidator = new DefaultEditTextValidator(	mEt,
-															attrs,
-															context);
+		if (!isInEditMode()){
+			editTextValidator = new DefaultEditTextValidator(	mEt,
+																attrs,
+																context);
 
-		density = WidgetUtil.getScreenDensity(getContext());
+			density = WidgetUtil.getScreenDensity(getContext());
 
-		initViews(attrs);
-		initAttributes(attrs);
+			initViews(attrs);
+			initAttributes(attrs);
+		}
 	}
 
 
@@ -261,12 +270,12 @@ public class RichEditText	extends
 		int insertionLength = repEnd
 								- repStart;
 
-		bufferEnd = Selection.getSelectionEnd(mEt.getText());
+		cursorPosition = position
+							+ insertionLength;
 
 		if (insertionLength != 0)
 			updateAppliedSpans(	position,
-								position
-									+ insertionLength);
+								cursorPosition);
 		else
 			Log.e(	"EDITOR",
 					"Insertion was called, but it's a replacement of \"\". Deletion should have been called");
@@ -292,7 +301,7 @@ public class RichEditText	extends
 		int insertionLength = repEnd
 								- repStart;
 
-		bufferEnd = position;
+		cursorPosition = position;
 
 		if (insertionLength != 0)
 			updateAppliedSpans(	position,
@@ -330,7 +339,7 @@ public class RichEditText	extends
 		int insertionLength = repEnd
 								- repStart;
 
-		bufferEnd = end;
+		cursorPosition = end;
 
 		if (insertionLength != 0)
 			updateAppliedSpans(	start,
@@ -355,7 +364,7 @@ public class RichEditText	extends
 	@Override
 	public void onAfterDelete(int start, int end){
 
-		bufferEnd = Selection.getSelectionEnd(mEt.getText());
+		cursorPosition = Selection.getSelectionEnd(mEt.getText());
 	}
 
 
@@ -477,6 +486,10 @@ public class RichEditText	extends
 			}
 		}else if (id == mClearButton.getId())
 			mEt.setText("");
+		else if (id == R.id.bgColorPicker)
+			showBgColorPicker();
+		else if (id == R.id.fgColorPicker)
+			showFgColorPicker();
 	}
 
 
@@ -566,23 +579,29 @@ public class RichEditText	extends
 								.length()
 						+ "\n\n***********************************");
 			if (isUserSelectingRange){
-
-			}else{
-				int position = Selection.getSelectionStart(mEt.getText());
-
-				String txt = mEt.getText()
-								.toString();
-
-				getAppliedSpans(position);
+				getAppliedSpans(selectionStart,
+								selectionEnd);
 
 				updateParagraphSpan(BULLET,
-									txt.lastIndexOf("\n",
-													position),
-									txt.indexOf("\n",
-												position),
+									selectionStart,
+									selectionEnd,
 									isChecked);
 			}
 		}
+	}
+
+
+	@Override
+	public void onCancel(ColorPickerDialog dialog){
+
+
+	}
+
+
+	@Override
+	public void onOk(ColorPickerDialog dialog, int color){
+
+
 	}
 
 
@@ -610,6 +629,9 @@ public class RichEditText	extends
 							(ToggleButton) mLayout.findViewById(R.id.strikethrough);
 		tgBgColor = (ToggleButton) mLayout.findViewById(R.id.bgColor);
 		tgFgColor = (ToggleButton) mLayout.findViewById(R.id.fgColor);
+
+		btnBgPicker = (Button) mLayout.findViewById(R.id.bgColorPicker);
+		btnFgPicker = (Button) mLayout.findViewById(R.id.fgColorPicker);
 
 		// Paragraph Spans
 		tgBullet = (ToggleButton) mLayout.findViewById(R.id.bullet);
@@ -684,6 +706,9 @@ public class RichEditText	extends
 		btnSubScript.setOnClickListener(this);
 		btnSuperScript.setOnClickListener(this);
 
+		btnBgPicker.setOnClickListener(this);
+		btnFgPicker.setOnClickListener(this);
+
 		tgBold.setOnCheckedChangeListener(this);
 		tgItalic.setOnCheckedChangeListener(this);
 		tgUnderline.setOnCheckedChangeListener(this);
@@ -716,6 +741,100 @@ public class RichEditText	extends
 										tgStrikethrough,
 										tgBgColor,
 										tgFgColor };
+	}
+
+
+	private void showFgColorPicker(){
+
+		ColorPickerDialog fgColorPicker = null;
+
+		if (fgColorPicker == null)
+			// initialColor is the initially-selected color to be shown
+			// in the rectangle on the left of the arrow.
+			// for example, 0xff000000 is black, 0xff0000ff is blue.
+			// Please be aware of the initial 0xff which is the alpha.
+			fgColorPicker = new ColorPickerDialog(	getContext(),
+													fgColor,
+													new ColorPickerListener(){
+
+														@Override
+														public void
+															onOk(	ColorPickerDialog dialog,
+																	int color){
+
+															// color is
+															// the
+															// color
+															// selected
+															// by
+															// the user.
+
+															fgColor = color;
+														}
+
+
+														@Override
+														public void
+															onCancel(ColorPickerDialog dialog){
+
+															// cancel
+															// was
+															// selected
+															// by
+															// the
+															// user
+														}
+													});
+
+		fgColorPicker.show();
+
+
+	}
+
+
+	private void showBgColorPicker(){
+
+		ColorPickerDialog bgColorPicker = null;
+
+		if (bgColorPicker == null)
+			// initialColor is the initially-selected color to be shown
+			// in the rectangle on the left of the arrow.
+			// for example, 0xff000000 is black, 0xff0000ff is blue.
+			// Please be aware of the initial 0xff which is the alpha.
+			bgColorPicker = new ColorPickerDialog(	getContext(),
+													bgColor,
+													new ColorPickerListener(){
+
+														@Override
+														public void
+															onOk(	ColorPickerDialog dialog,
+																	int color){
+
+															// color is
+															// the
+															// color
+															// selected
+															// by
+															// the user.
+															bgColor = color;
+														}
+
+
+														@Override
+														public void
+															onCancel(ColorPickerDialog dialog){
+
+															// cancel
+															// was
+															// selected
+															// by
+															// the
+															// user
+														}
+													});
+
+		bgColorPicker.show();
+
 	}
 
 
@@ -902,6 +1021,7 @@ public class RichEditText	extends
 	}
 
 
+	@Override
 	public void setBackground(Drawable background){
 
 		mEt.setBackgroundDrawable(background);
@@ -981,46 +1101,18 @@ public class RichEditText	extends
 
 		appliedSpans = null;
 
+
 		if (ajacentSpans != null){ // check ajacentSpans for any that would
 									// apply to this position
 
 			appliedSpans = new ISpan[0];
 
-			for (ISpan span : ajacentSpans){
-
-				if (span.getStartPosition() < position
-					&& span.getEndPosition() > position)
+			for (ISpan span : ajacentSpans)
+				if (isSpanApplied(	span,
+									position))
 					appliedSpans = ArrayUtils.add(	appliedSpans,
 													span);
 
-				if (span.getFlag() == Spanned.SPAN_PARAGRAPH){
-
-					int synFlag =
-									((IParagraphSpan) span).getFlagSynonym(bufferEnd);
-
-					if (span.getStartPosition() == position
-						&& ((IParagraphSpan) span).isStartInclusive(synFlag))
-						appliedSpans = ArrayUtils.add(	appliedSpans,
-														span);
-
-					if (span.getEndPosition() == position
-						&& ((IParagraphSpan) span).isEndInclusive(synFlag))
-						appliedSpans = ArrayUtils.add(	appliedSpans,
-														span);
-
-				}else{
-
-					if (span.getStartPosition() == position
-						&& span.isStartInclusive())
-						appliedSpans = ArrayUtils.add(	appliedSpans,
-														span);
-
-					if (span.getEndPosition() == position
-						&& span.isEndInclusive())
-						appliedSpans = ArrayUtils.add(	appliedSpans,
-														span);
-				}
-			}
 		}
 
 		if (appliedSpans != null){
@@ -1065,7 +1157,7 @@ public class RichEditText	extends
 				for (ISpan span : ajacentSpans)
 					if (isSpanApplied(	span,
 										start,
-										end) != null)
+										end))
 						appliedSpans = ArrayUtils.add(	appliedSpans,
 														span);
 			}
@@ -1082,35 +1174,64 @@ public class RichEditText	extends
 	}
 
 
-	private ISpan isSpanApplied(ISpan span, int start, int end){
+	private boolean isSpanApplied(ISpan span, int position){
+
+		// Span engulfs range - regardless of type, it's applied
+		if (span.getStartPosition() < position
+			&& span.getEndPosition() > position)
+			return true;
+
+		// If it's a paragraph span and
+		else if (span.getFlag() == Spanned.SPAN_PARAGRAPH){
+
+			int synFlag =
+							((IParagraphSpan) span).getFlagSynonym(cursorPosition);
+
+			if (span.getStartPosition() == position
+				&& ((IParagraphSpan) span).isStartInclusive(synFlag)
+				|| span.getEndPosition() == position
+				&& ((IParagraphSpan) span).isEndInclusive(synFlag))
+				return true;
+
+		}else if (span.getStartPosition() == position
+					&& span.isStartInclusive()
+					|| span.getEndPosition() == position
+					&& span.isEndInclusive())
+			return true;
+
+		return false;
+	}
+
+
+	private boolean isSpanApplied(ISpan span, int start, int end){
 
 		if (span.getFlag() == Spanned.SPAN_PARAGRAPH){
 
-			int synFlag = ((IParagraphSpan) span).getFlagSynonym(bufferEnd);
+			int synFlag = ((IParagraphSpan) span).getFlagSynonym(cursorPosition);
 
 			if (span.getEndPosition() > start){
-				if (span.getStartPosition() < end)
-					return span;
-				else if (span.getStartPosition() == end
-							&& ((IParagraphSpan) span).isStartInclusive(synFlag))
-					return span;
+
+				if (span.getStartPosition() < end
+					|| span.getStartPosition() == end
+					&& ((IParagraphSpan) span).isStartInclusive(synFlag))
+					return true;
 
 			}else if (span.getEndPosition() == start
 						&& ((IParagraphSpan) span).isEndInclusive(synFlag))
-				return span;
+				return true;
 
 		}else if (span.getEndPosition() > start){
-			if (span.getStartPosition() < end)
-				return span;
-			else if (span.getStartPosition() == end
-						&& span.isStartInclusive())
-				return span;
+
+			if (span.getStartPosition() < end
+				|| span.getStartPosition() == end
+				&& span.isStartInclusive())
+				return true;
 
 		}else if (span.getEndPosition() == start
 					&& span.isEndInclusive())
-			return span;
+			return true;
 
-		return null;
+		return false;
 	}
 
 
@@ -1205,6 +1326,7 @@ public class RichEditText	extends
 			&& !isApplied){ // Is Toggled, but not applied - apply it
 
 			boolean appliedExtended = false;
+
 			for (ISpan mSpan : ajacentSpans)
 				if (mSpan.getType() == type
 					&& mSpan.getEndPosition() == start){
