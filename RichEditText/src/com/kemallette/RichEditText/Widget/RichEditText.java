@@ -8,6 +8,8 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.Spannable;
@@ -56,8 +58,7 @@ public class RichEditText	extends
 											RichTextWatcher,
 											TextWatcher,
 											SelectionChangeListener,
-											SpanTypes,
-											ColorPickerListener{
+											SpanTypes{
 
 	// Replaces the default edit text factory that produces editables
 	// which our custom editable and listener
@@ -84,8 +85,8 @@ public class RichEditText	extends
 
 	// User style preferences
 	// TODO: Text BG_COLOR and FG_COLOR pickers
-	private int						bulletColor				= android.R.color.black;
-	private int						fgColor					= Color.YELLOW,
+	private int						bulletColor				= android.R.color.transparent;
+	private int						fgColor					= android.R.color.transparent,
 		bgColor = Color.LTGRAY;
 
 
@@ -167,6 +168,39 @@ public class RichEditText	extends
 			initViews(attrs);
 			initAttributes(attrs);
 		}
+	}
+
+
+	@Override
+	protected void onRestoreInstanceState(Parcelable state){
+
+		Bundle mBundle = (Bundle) state;
+		if (mBundle != null
+			&& !mBundle.isEmpty()){
+			fgColor = mBundle.getInt("fgColor");
+			bgColor = mBundle.getInt("bgColor");
+			super.onRestoreInstanceState(mBundle.getParcelable("instanceState"));
+			return;
+		}
+
+		super.onRestoreInstanceState(state);
+	}
+
+
+	@Override
+	protected Parcelable onSaveInstanceState(){
+
+		// TODO: include toggle button states
+		Bundle mBundle = new Bundle();
+		mBundle.putInt(	"fgColor",
+						fgColor);
+		mBundle.putParcelable(	"instanceState",
+								super.onSaveInstanceState());
+		mBundle.putInt(	"bgColor",
+						bgColor);
+
+
+		return mBundle;
 	}
 
 
@@ -588,20 +622,6 @@ public class RichEditText	extends
 									isChecked);
 			}
 		}
-	}
-
-
-	@Override
-	public void onCancel(ColorPickerDialog dialog){
-
-
-	}
-
-
-	@Override
-	public void onOk(ColorPickerDialog dialog, int color){
-
-
 	}
 
 

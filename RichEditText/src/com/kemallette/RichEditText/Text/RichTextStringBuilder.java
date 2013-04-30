@@ -187,9 +187,10 @@ public class RichTextStringBuilder	extends
 						end,
 						flags);
 
-		mWatcher.onSpanAdded(	this,
-								what,
-								start,
-								end);
+		if (mWatcher != null)
+			mWatcher.onSpanAdded(	this,
+									what,
+									start,
+									end);
 	}
 }

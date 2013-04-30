@@ -41,179 +41,184 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/fieldLayout" >
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal" >
+                android:orientation="vertical" >
 
-                <ToggleButton
-                    android:id="@+id/bold"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textOff="B"
-                    android:textOn="B"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                <ToggleButton
-                    android:id="@+id/italic"
+                    <ToggleButton
+                        android:id="@+id/bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="B"
+                        android:textOn="B"
+                        android:textStyle="bold" />
+
+                    <ToggleButton
+                        android:id="@+id/italic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="I"
+                        android:textOn="I"
+                        android:textStyle="normal" />
+
+                    <ToggleButton
+                        android:id="@+id/underline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="U"
+                        android:textOn="U"
+                        android:textStyle="normal" />
+
+                    <ToggleButton
+                        android:id="@+id/strikethrough"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:textOff="Strike"
+                        android:textOn="Strike"
+                        android:textStyle="normal" />
+
+                    <Button
+                        android:id="@+id/sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/subscript"
+                        android:textStyle="normal" />
+
+                    <Button
+                        android:id="@+id/sup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/superscript"
+                        android:textStyle="normal" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textOff="I"
-                    android:textOn="I"
-                    android:textStyle="normal" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                <ToggleButton
-                    android:id="@+id/underline"
+                    <ToggleButton
+                        android:id="@+id/bgColor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="@string/bgColor"
+                        android:textOn="@string/bgColor"
+                        android:textStyle="normal" />
+
+                    <Button
+                        android:id="@+id/bgColorPicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/color_wheel"
+                        android:text="@string/bgColor" />
+
+                    <ToggleButton
+                        android:id="@+id/fgColor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="@string/fgColor"
+                        android:textOn="@string/fgColor"
+                        android:textStyle="normal" />
+
+                    <Button
+                        android:id="@+id/fgColorPicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:drawableTop="@drawable/color_wheel"
+                        android:text="@string/fgColor" />
+
+                    <ToggleButton
+                        android:id="@+id/bullet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="Bullet"
+                        android:textOn="Bullet"
+                        android:textStyle="normal" />
+
+                    <ToggleButton
+                        android:id="@+id/ordered"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="OL"
+                        android:textOn="OL"
+                        android:textStyle="normal" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textOff="U"
-                    android:textOn="U"
-                    android:textStyle="normal" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                <ToggleButton
-                    android:id="@+id/strikethrough"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
-                    android:textOff="Strike"
-                    android:textOn="Strike"
-                    android:textStyle="normal" />
+                    <ToggleButton
+                        android:id="@+id/alignLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="Left"
+                        android:textOn="Normal" />
 
-                <Button
-                    android:id="@+id/sub"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/subscript"
-                    android:textStyle="normal" />
+                    <ToggleButton
+                        android:id="@+id/alignCenter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="Center"
+                        android:textOn="Center" />
 
-                <Button
-                    android:id="@+id/sup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/superscript"
-                    android:textStyle="normal" />
+                    <ToggleButton
+                        android:id="@+id/alignOpposite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:textOff="Opposite"
+                        android:textOn="Opposite" />
+
+                    <Button
+                        android:id="@+id/smile1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":-)" />
+
+                    <Button
+                        android:id="@+id/smile2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":-(" />
+
+                    <Button
+                        android:id="@+id/smile3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":-D" />
+
+                    <Button
+                        android:id="@+id/clear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/clear" />
+
+                    <ToggleButton
+                        android:id="@+id/test"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Test" />
+                </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <ToggleButton
-                    android:id="@+id/bgColor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textOff="@string/bgColor"
-                    android:textOn="@string/bgColor"
-                    android:textStyle="normal" />
-
-                <Button
-                    android:id="@+id/bgColorPicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/color_wheel"
-                    android:text="@string/bgColor" />
-
-                <ToggleButton
-                    android:id="@+id/fgColor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textOff="@string/fgColor"
-                    android:textOn="@string/fgColor"
-                    android:textStyle="normal" />
-
-                <Button
-                    android:id="@+id/fgColorPicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
-                    android:drawableTop="@drawable/color_wheel"
-                    android:text="@string/fgColor" />
-
-                <ToggleButton
-                    android:id="@+id/bullet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textOff="Bullet"
-                    android:textOn="Bullet"
-                    android:textStyle="normal" />
-
-                <ToggleButton
-                    android:id="@+id/ordered"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textOff="OL"
-                    android:textOn="OL"
-                    android:textStyle="normal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <ToggleButton
-                    android:id="@+id/alignLeft"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textOff="Left"
-                    android:textOn="Normal" />
-
-                <ToggleButton
-                    android:id="@+id/alignCenter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textOff="Center"
-                    android:textOn="Center" />
-
-                <ToggleButton
-                    android:id="@+id/alignOpposite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
-                    android:textOff="Opposite"
-                    android:textOn="Opposite" />
-
-                <Button
-                    android:id="@+id/smile1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":-)" />
-
-                <Button
-                    android:id="@+id/smile2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":-(" />
-
-                <Button
-                    android:id="@+id/smile3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":-D" />
-
-                <Button
-                    android:id="@+id/clear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/clear" />
-
-                <ToggleButton
-                    android:id="@+id/test"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Test" />
-            </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
     </HorizontalScrollView>
 
 </RelativeLayout>
