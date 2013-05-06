@@ -7,138 +7,144 @@ import android.text.style.TypefaceSpan;
 import android.util.Log;
 
 
+public class FontSpan	extends
+						TypefaceSpan implements
+									ISpan{
 
-public class FontSpan extends TypefaceSpan implements ISpan{
-    
-    
-    private int startPosition, endPosition, flag;
-    
 
-    public FontSpan(final int startPostion,
-        final int endPostion, final int flag, String fontFamily) {
+	private int	startPosition, endPosition, flag;
 
-        super(fontFamily); // Fontspans constructor sets the font family
-        
-        startPosition = startPostion;
-        endPosition = endPostion;
-        this.flag = flag;
-    }
-    
 
-    @Override
-    public void setSpan(final Editable e) {
+	public FontSpan(final int startPostion,
+					final int endPostion,
+					final int flag,
+					String fontFamily){
 
-        if (startPosition < 0)
-            startPosition = 0;
-        
-        if (!(e.length() < startPosition))
-            if (startPosition > endPosition)
-                Log.e("SPAN",
-                      "StartPosition was after End Position - couldn't set.");
-            else
-                e.setSpan(this, startPosition, endPosition, flag);
-        else
-            Log.e("SPAN",
-                  "DID NOT SET: Start position past EditText length.");
-    }
-    
+		super(fontFamily); // Fontspans constructor sets the font family
 
-    @Override
-    public String getFamily() {
+		startPosition = startPostion;
+		endPosition = endPostion;
+		this.flag = flag;
+	}
 
-        return super.getFamily();
-    }
-    
 
-    @Override
-    public int getStartPosition() {
+	@Override
+	public void setSpan(final Editable e){
 
-        return startPosition;
-    }
-    
+		if (startPosition < 0)
+			startPosition = 0;
 
-    @Override
-    public int getEndPosition() {
+		if (!(e.length() < startPosition))
+			if (startPosition > endPosition)
+				Log.e(	"SPAN",
+						"StartPosition was after End Position - couldn't set.");
+			else
+				e.setSpan(	this,
+							startPosition,
+							endPosition,
+							flag);
+		else
+			Log.e(	"SPAN",
+					"DID NOT SET: Start position past EditText length.");
+	}
 
-        return endPosition;
-    }
-    
 
-    @Override
-    public void setStartPosition(final int startPos) {
+	@Override
+	public String getFamily(){
 
-        startPosition = startPos;
-        
-    }
-    
+		return super.getFamily();
+	}
 
-    @Override
-    public void setEndPosition(final int endPos) {
 
-        endPosition = endPos;
-    }
-    
+	@Override
+	public int getStartPosition(){
 
-    @Override
-    public void setFlag(final int flag) {
+		return startPosition;
+	}
 
-        this.flag = flag;
-    }
-    
 
-    @Override
-    public int getFlag() {
+	@Override
+	public int getEndPosition(){
 
-        return flag;
-    }
-    
+		return endPosition;
+	}
 
-    @Override
-    public void setType(final int type) {
 
-        // do nothing
-    }
-    
+	@Override
+	public void setStartPosition(final int startPos){
 
-    @Override
-    public int getType() {
+		startPosition = startPos;
 
-        return IMAGE;
-    }
-    
+	}
 
-    @Override
-    public boolean isStartInclusive() {
 
-        if (flag == Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-            || flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-            return true;
-        else
-            return false;
-    }
-    
+	@Override
+	public void setEndPosition(final int endPos){
 
-    @Override
-    public boolean isEndInclusive() {
+		endPosition = endPos;
+	}
 
-        if (flag == Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-            || flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-            return true;
-        else
-            return false;
-    }
-    
 
-    @Override
-    public void removeSpan(Editable text) {
+	@Override
+	public void setFlag(final int flag){
 
-        text.removeSpan(this);
-    }
-    
+		this.flag = flag;
+	}
 
-    @Override
-    public void dump() {
 
-        Span.dump(this);
-    }
+	@Override
+	public int getFlag(){
+
+		return flag;
+	}
+
+
+	@Override
+	public void setType(final int type){
+
+		// do nothing
+	}
+
+
+	@Override
+	public int getType(){
+
+		return IMAGE;
+	}
+
+
+	@Override
+	public boolean isStartInclusive(){
+
+		if (flag == Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+			|| flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+			return true;
+		else
+			return false;
+	}
+
+
+	@Override
+	public boolean isEndInclusive(){
+
+		if (flag == Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+			|| flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+			return true;
+		else
+			return false;
+	}
+
+
+	@Override
+	public void removeSpan(Editable text){
+
+		text.removeSpan(this);
+	}
+
+
+	@Override
+	public void dump(){
+
+		BaseSpan.dump(this);
+	}
 }

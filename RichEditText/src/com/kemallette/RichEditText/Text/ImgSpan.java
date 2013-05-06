@@ -149,6 +149,6 @@ public class ImgSpan extends ImageSpan implements ISpan{
     @Override
     public void dump() {
 
-        Span.dump(this);
+        BaseSpan.dump(this);
     }
 }

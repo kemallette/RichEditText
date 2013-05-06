@@ -7,16 +7,16 @@ import android.text.style.UpdateAppearance;
 
 
 /**
- * Just a lighter weight version of Span for marking points
+ * Just a lighter weight version of BaseSpan for marking points
  * 
  */
-public class SpanMarker implements UpdateAppearance{
+public class MarkerSpan implements UpdateAppearance{
     
     public int position;
     public int type;
     
 
-    public SpanMarker(int position, int type) {
+    public MarkerSpan(int position, int type) {
 
         super();
         this.position = position;

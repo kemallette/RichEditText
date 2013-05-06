@@ -32,8 +32,9 @@ import android.widget.TextView.BufferType;
 import android.widget.ToggleButton;
 
 import com.kemallette.RichEditText.R;
-import com.kemallette.RichEditText.ColorPicker.ColorPickerDialog;
-import com.kemallette.RichEditText.ColorPicker.ColorPickerDialog.ColorPickerListener;
+import com.kemallette.RichEditText.HoloColorPicker.ColorPicker.OnColorChangedListener;
+import com.kemallette.RichEditText.HoloColorPicker.ColorPickerDialog;
+import com.kemallette.RichEditText.Text.BulletListSpan;
 import com.kemallette.RichEditText.Text.FontSpan;
 import com.kemallette.RichEditText.Text.IParagraphSpan;
 import com.kemallette.RichEditText.Text.ISpan;
@@ -47,7 +48,7 @@ import com.kemallette.RichEditText.Text.TextForgroundColorSpan;
 import com.kemallette.RichEditText.Text.TextStyleSpan;
 import com.kemallette.RichEditText.Text.TextSubscriptSpan;
 import com.kemallette.RichEditText.Text.TextSuperscriptSpan;
-import com.kemallette.RichEditText.Text.UndlneSpan;
+import com.kemallette.RichEditText.Text.UnderliningSpan;
 import com.kemallette.RichEditText.Validations.Validator;
 
 
@@ -83,8 +84,6 @@ public class RichEditText	extends
 	private boolean					showFormattingOptions	= false;
 	private boolean					showClearButton			= true;
 
-	// User style preferences
-	// TODO: Text BG_COLOR and FG_COLOR pickers
 	private int						bulletColor				= android.R.color.transparent;
 	private int						fgColor					= android.R.color.transparent,
 		bgColor = Color.LTGRAY;
@@ -96,6 +95,7 @@ public class RichEditText	extends
 	 * This is also the end position of a selection
 	 */
 	private int						cursorPosition;
+	private int						bulletMarginWidth		= 5;
 
 	private float					density;
 
@@ -125,7 +125,7 @@ public class RichEditText	extends
 	private RichEditTextField		mEt;
 	private ImageView				mClearButton;
 	private ViewGroup				mFormattingLayout;
-
+	private ColorPickerDialog		fgColorPicker, bgColorPicker;
 	private EditTextValidator		editTextValidator;
 
 	private final RichTextWatcher	mSpanWatcher			= this;
@@ -410,7 +410,7 @@ public class RichEditText	extends
 
 	/***********************************************************
 	 * 
-	 * Span Watcher implementation from RichTextWatcher
+	 * BaseSpan Watcher implementation from RichTextWatcher
 	 * 
 	 ************************************************************/
 
@@ -421,7 +421,7 @@ public class RichEditText	extends
 			&& what.getClass() != null){
 
 			// Log.i("EDITOR",
-			// "Span Added: " + what.getClass()
+			// "BaseSpan Added: " + what.getClass()
 			// .getName() + "\n\n");
 		}
 	}
@@ -447,7 +447,7 @@ public class RichEditText	extends
 		}
 		// if (what instanceof ISpan) {
 		// Log.i("EDITOR",
-		// "Span Removed: " + what.getClass()
+		// "BaseSpan Removed: " + what.getClass()
 		// .getName() + "\n\n");
 		// }
 
@@ -766,46 +766,21 @@ public class RichEditText	extends
 
 	private void showFgColorPicker(){
 
-		ColorPickerDialog fgColorPicker = null;
+		fgColorPicker = null;
 
 		if (fgColorPicker == null)
-			// initialColor is the initially-selected color to be shown
-			// in the rectangle on the left of the arrow.
-			// for example, 0xff000000 is black, 0xff0000ff is blue.
-			// Please be aware of the initial 0xff which is the alpha.
 			fgColorPicker = new ColorPickerDialog(	getContext(),
-													fgColor,
-													new ColorPickerListener(){
+													new OnColorChangedListener(){
 
 														@Override
 														public void
-															onOk(	ColorPickerDialog dialog,
-																	int color){
-
-															// color is
-															// the
-															// color
-															// selected
-															// by
-															// the user.
+															onColorChanged(int color){
 
 															fgColor = color;
 														}
-
-
-														@Override
-														public void
-															onCancel(ColorPickerDialog dialog){
-
-															// cancel
-															// was
-															// selected
-															// by
-															// the
-															// user
-														}
-													});
-
+													},
+													fgColor);
+		fgColorPicker.setOldColor(fgColor);
 		fgColorPicker.show();
 
 
@@ -814,45 +789,24 @@ public class RichEditText	extends
 
 	private void showBgColorPicker(){
 
-		ColorPickerDialog bgColorPicker = null;
+		bgColorPicker = null;
 
 		if (bgColorPicker == null)
-			// initialColor is the initially-selected color to be shown
-			// in the rectangle on the left of the arrow.
-			// for example, 0xff000000 is black, 0xff0000ff is blue.
-			// Please be aware of the initial 0xff which is the alpha.
 			bgColorPicker = new ColorPickerDialog(	getContext(),
-													bgColor,
-													new ColorPickerListener(){
+													new OnColorChangedListener(){
 
 														@Override
 														public void
-															onOk(	ColorPickerDialog dialog,
-																	int color){
+															onColorChanged(int color){
 
-															// color is
-															// the
-															// color
-															// selected
-															// by
-															// the user.
 															bgColor = color;
+
+
 														}
+													},
+													bgColor);
 
-
-														@Override
-														public void
-															onCancel(ColorPickerDialog dialog){
-
-															// cancel
-															// was
-															// selected
-															// by
-															// the
-															// user
-														}
-													});
-
+		bgColorPicker.setOldColor(bgColor);
 		bgColorPicker.show();
 
 	}
@@ -1091,7 +1045,7 @@ public class RichEditText	extends
 
 	/***********************************************************
 	 * 
-	 * Document Span Tracking/Placing Helpers
+	 * Document BaseSpan Tracking/Placing Helpers
 	 * 
 	 ************************************************************/
 
@@ -1196,7 +1150,7 @@ public class RichEditText	extends
 
 	private boolean isSpanApplied(ISpan span, int position){
 
-		// Span engulfs range - regardless of type, it's applied
+		// BaseSpan engulfs range - regardless of type, it's applied
 		if (span.getStartPosition() < position
 			&& span.getEndPosition() > position)
 			return true;
@@ -1244,7 +1198,7 @@ public class RichEditText	extends
 
 			if (span.getStartPosition() < end
 				|| span.getStartPosition() == end
-				&& span.isStartInclusive())
+				&& ((FontSpan) span).isStartInclusive())
 				return true;
 
 		}else if (span.getEndPosition() == start
@@ -1313,17 +1267,6 @@ public class RichEditText	extends
 	}
 
 
-	private void updateParagraphSpan(int type,
-										int start,
-										int end,
-										boolean isToggled){
-
-		// TODO: update paragraph Span - this is were the magic happens - see
-		// what I did with
-		// updateSpan
-	}
-
-
 	private void updateSpan(int type, int start, int end, boolean isToggled){
 
 		ISpan[] mSpans = isSpanTypeApplied(type);
@@ -1368,7 +1311,10 @@ public class RichEditText	extends
 
 		}else if (!isToggled
 					&& isApplied
-					&& mSpans.length > 0)
+					&& mSpans.length > 0) // Is applied, but not toggled. Remove
+											// if within start/end (or equal to
+											// start/end if that end is
+											// EXCLUSIVE)
 			for (ISpan mSpan : mSpans)
 				if (mSpan.getStartPosition() >= start){
 					if (mSpan.getEndPosition() <= end)
@@ -1390,6 +1336,18 @@ public class RichEditText	extends
 					splitSpan(	mSpan,
 								start,
 								end);
+	}
+
+
+	private void updateParagraphSpan(int type,
+										int start,
+										int end,
+										boolean isToggled){
+
+		// TODO: update paragraph BaseSpan - this is were the magic happens -
+		// see
+		// what I did with
+		// updateSpan
 	}
 
 
@@ -1419,9 +1377,9 @@ public class RichEditText	extends
 											flag);
 
 			case UNDERLINE:
-				return new UndlneSpan(	start,
-										end,
-										flag);
+				return new UnderliningSpan(	start,
+											end,
+											flag);
 
 			case STRIKE:
 				return new StrikeSpan(	start,
@@ -1460,8 +1418,11 @@ public class RichEditText	extends
 
 				// Paragraph Spans
 			case BULLET:
-				// TODO: Make BulletSpan
-				break;
+				return new BulletListSpan(	start,
+											end,
+											density,
+											bulletColor,
+											bulletMarginWidth);
 
 			case OL:
 				break;
@@ -1499,7 +1460,7 @@ public class RichEditText	extends
 							flag);
 
 
-				// Apply second Span (Covers end and forward)
+				// Apply second BaseSpan (Covers end and forward)
 				flag =
 						(mSpan.isEndInclusive())
 												? Spanned.SPAN_EXCLUSIVE_INCLUSIVE

@@ -3,20 +3,20 @@ package com.kemallette.RichEditText.Text;
 
 import android.text.Editable;
 import android.text.Spanned;
-import android.text.style.StrikethroughSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 
 
-public class StrikeSpan	extends
-						StrikethroughSpan	implements
-											ISpan{
+public class UnderliningSpan	extends
+						UnderlineSpan	implements
+										ISpan{
 
-	// TODO: Strike color option
+	// TODO: Underline color option
 
 	int	startPosition, endPosition, flag;
 
 
-	public StrikeSpan(	final int startPostion,
+	public UnderliningSpan(	final int startPostion,
 						final int endPostion,
 						final int flag){
 
@@ -46,6 +46,7 @@ public class StrikeSpan	extends
 		else
 			Log.e(	"SPAN",
 					"DID NOT SET: Start position past EditText length.");
+
 	}
 
 
@@ -102,7 +103,7 @@ public class StrikeSpan	extends
 	@Override
 	public int getType(){
 
-		return SpanTypes.STRIKE;
+		return UNDERLINE;
 	}
 
 
@@ -140,5 +141,4 @@ public class StrikeSpan	extends
 
 		BaseSpan.dump(this);
 	}
-
 }

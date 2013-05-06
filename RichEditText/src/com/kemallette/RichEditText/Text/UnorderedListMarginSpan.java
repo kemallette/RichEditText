@@ -6,135 +6,171 @@ import android.text.Spanned;
 import android.util.Log;
 
 
-public class UnorderedListMarginSpan extends MarginSpan
-    implements ISpan{
-    
-    float density;
-    private int startPosition, endPosition, marginSizeFirst,
-        marginSizeRest;
-    
+public class UnorderedListMarginSpan extends
+									MarginSpan
+												implements
+												IParagraphSpan{
 
-    public UnorderedListMarginSpan(int start, int end,
-        float density, int marginSizeFirst, int marginSizeRest) {
+	float	density;
+	private int	startPosition, endPosition, marginSizeFirst,
+				marginSizeRest;
 
-        super(marginSizeFirst, marginSizeRest);
-        
-        this.density = density;
-        this.marginSizeFirst = marginSizeFirst;
-        this.marginSizeRest = marginSizeRest;
-    }
-    
 
-    @Override
-    public int getLeadingMargin(boolean first) {
+	public UnorderedListMarginSpan(	int start,
+									int end,
+									float density,
+									int marginSizeFirst,
+									int marginSizeRest){
 
-        if (first)
-            return (int) density * marginSizeFirst;
-        else
-            return (int) density * marginSizeRest;
-    }
-    
+		super(	marginSizeFirst,
+				marginSizeRest);
 
-    @Override
-    public void setSpan(Editable e) {
+		this.density = density;
+		this.marginSizeFirst = marginSizeFirst;
+		this.marginSizeRest = marginSizeRest;
+	}
 
-        if (startPosition < 0)
-            startPosition = 0;
-        
-        if (startPosition > endPosition)
-            Log.e("SPAN",
-                  "StartPosition was after End Position - couldn't set.");
-        else
-            Span.setSpan(this, e, startPosition, endPosition,
-                         Spanned.SPAN_PARAGRAPH);
-    }
-    
 
-    @Override
-    public int getStartPosition() {
+	@Override
+	public int getLeadingMargin(boolean first){
 
-        return startPosition;
-    }
-    
+		if (first)
+			return (int) density
+					* marginSizeFirst;
+		else
+			return (int) density
+					* marginSizeRest;
+	}
 
-    @Override
-    public int getEndPosition() {
 
-        return endPosition;
-    }
-    
+	@Override
+	public void setSpan(Editable e){
 
-    @Override
-    public void setStartPosition(int startPos) {
+		if (startPosition < 0)
+			startPosition = 0;
 
-        this.startPosition = startPos;
-        
-    }
-    
+		if (startPosition > endPosition)
+			Log.e(	"SPAN",
+					"StartPosition was after End Position - couldn't set.");
+		else
+			BaseSpan.setSpan(	this,
+								e,
+								startPosition,
+								endPosition,
+								Spanned.SPAN_PARAGRAPH);
+	}
 
-    @Override
-    public void setEndPosition(int endPos) {
 
-        this.endPosition = endPos;
-    }
-    
+	@Override
+	public int getStartPosition(){
 
-    @Override
-    public void setFlag(int flag) {
+		return startPosition;
+	}
 
-        
-    }
-    
 
-    @Override
-    public int getFlag() {
+	@Override
+	public int getEndPosition(){
 
-        return Spanned.SPAN_PARAGRAPH;
-        
-    }
-    
+		return endPosition;
+	}
 
-    @Override
-    public void setType(int type) {
 
-        
-    }
-    
+	@Override
+	public void setStartPosition(int startPos){
 
-    @Override
-    public int getType() {
+		this.startPosition = startPos;
 
-        return SpanTypes.LEADING_MARGIN_UL;
-    }
-    
+	}
 
-    @Override
-    public void removeSpan(Editable text) {
 
-        text.removeSpan(this);
-    }
-    
+	@Override
+	public void setEndPosition(int endPos){
 
-    @Override
-    public void dump() {
+		this.endPosition = endPos;
+	}
 
-        Span.dump(this);
-    }
-    
 
-    @Override
-    public boolean isStartInclusive() {
+	@Override
+	public void setFlag(int flag){
 
-        // TODO Auto-generated method stub
-        return false;
-    }
-    
 
-    @Override
-    public boolean isEndInclusive() {
+	}
 
-        // TODO Auto-generated method stub
-        return false;
-    }
-    
+
+	@Override
+	public int getFlag(){
+
+		return Spanned.SPAN_PARAGRAPH;
+
+	}
+
+
+	@Override
+	public void setType(int type){
+
+
+	}
+
+
+	@Override
+	public int getType(){
+
+		return SpanTypes.LEADING_MARGIN_UL;
+	}
+
+
+	@Override
+	public void removeSpan(Editable text){
+
+		text.removeSpan(this);
+	}
+
+
+	@Override
+	public int getFlagSynonym(int bufferEnd){
+
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public boolean isStartInclusive(int synonymFlag){
+
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean isEndInclusive(int synonymFlag){
+
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public void dump(){
+
+		BaseSpan.dump(this);
+	}
+
+
+	@Override
+	public boolean isStartInclusive(){
+
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean isEndInclusive(){
+
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 }

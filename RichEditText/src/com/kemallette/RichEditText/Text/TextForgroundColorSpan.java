@@ -9,152 +9,159 @@ import android.util.Log;
 
 
 /**
- * Color is set by constructor and is immutable.
- * Have to create a new span and apply it to change the fgcolor
+ * Color is set by constructor and is immutable. Have to create a new span and
+ * apply it to change the fgcolor
  */
-public class TextForgroundColorSpan extends ForegroundColorSpan
-    implements ISpan{
-    
-    private int startPosition, endPosition, flag;
-    private TextPaint mTextPaint;
-    
+public class TextForgroundColorSpan	extends
+									ForegroundColorSpan
+														implements
+														ISpan{
 
-    public TextForgroundColorSpan(final int startPostion,
-        final int endPostion, final int flag, final int color) {
+	private int			startPosition, endPosition, flag;
+	private TextPaint	mTextPaint;
 
-        super(color); // Foreground color span's constructor sets the color
-        
-        startPosition = startPostion;
-        endPosition = endPostion;
-        this.flag = flag;
-        
-        mTextPaint = new TextPaint();
-    }
-    
 
-    @Override
-    public void setSpan(final Editable e) {
+	public TextForgroundColorSpan(	final int startPostion,
+									final int endPostion,
+									final int flag,
+									final int color){
 
-        if (startPosition < 0)
-            startPosition = 0;
-        
-        if (!(e.length() < startPosition))
-            if (startPosition > endPosition)
-                Log.e("SPAN",
-                      "StartPosition was after End Position - couldn't set.");
-            else
-                e.setSpan(this, startPosition, endPosition, flag);
-        else
-            Log.e("SPAN",
-                  "DID NOT SET: Start position past EditText length.");
-    }
-    
+		super(color); // Foreground color span's constructor sets the color
 
-    public int getColor() {
+		startPosition = startPostion;
+		endPosition = endPostion;
+		this.flag = flag;
 
-        return super.getForegroundColor();
-    }
-    
+		mTextPaint = new TextPaint();
+	}
 
-    public void setColor(int color) {
 
-        mTextPaint.bgColor = color;
-        updateDrawState(mTextPaint);
-        super.updateDrawState(mTextPaint);
-    }
-    
+	@Override
+	public void setSpan(final Editable e){
 
-    @Override
-    public int getStartPosition() {
+		if (startPosition < 0)
+			startPosition = 0;
 
-        return startPosition;
-    }
-    
+		if (!(e.length() < startPosition))
+			if (startPosition > endPosition)
+				Log.e(	"SPAN",
+						"StartPosition was after End Position - couldn't set.");
+			else
+				e.setSpan(	this,
+							startPosition,
+							endPosition,
+							flag);
+		else
+			Log.e(	"SPAN",
+					"DID NOT SET: Start position past EditText length.");
+	}
 
-    @Override
-    public int getEndPosition() {
 
-        return endPosition;
-    }
-    
+	public int getColor(){
 
-    @Override
-    public void setStartPosition(final int startPos) {
+		return super.getForegroundColor();
+	}
 
-        startPosition = startPos;
-        
-    }
-    
 
-    @Override
-    public void setEndPosition(final int endPos) {
+	public void setColor(int color){
 
-        endPosition = endPos;
-    }
-    
+		mTextPaint.bgColor = color;
+		updateDrawState(mTextPaint);
+		super.updateDrawState(mTextPaint);
+	}
 
-    @Override
-    public void setFlag(final int flag) {
 
-        this.flag = flag;
-    }
-    
+	@Override
+	public int getStartPosition(){
 
-    @Override
-    public int getFlag() {
+		return startPosition;
+	}
 
-        return flag;
-    }
-    
 
-    @Override
-    public void setType(final int type) {
+	@Override
+	public int getEndPosition(){
 
-        // do nothing
-    }
-    
+		return endPosition;
+	}
 
-    @Override
-    public int getType() {
 
-        return FOREGROUND_COLOR;
-    }
-    
+	@Override
+	public void setStartPosition(final int startPos){
 
-    @Override
-    public boolean isStartInclusive() {
+		startPosition = startPos;
 
-        if (flag == Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-            || flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-            return true;
-        else
-            return false;
-    }
-    
+	}
 
-    @Override
-    public boolean isEndInclusive() {
 
-        if (flag == Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-            || flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-            return true;
-        else
-            return false;
-    }
-    
+	@Override
+	public void setEndPosition(final int endPos){
 
-    @Override
-    public void removeSpan(Editable text) {
+		endPosition = endPos;
+	}
 
-        text.removeSpan(this);
-    }
-    
 
-    @Override
-    public void dump() {
+	@Override
+	public void setFlag(final int flag){
 
-        Span.dump(this);
-    }
-    
+		this.flag = flag;
+	}
+
+
+	@Override
+	public int getFlag(){
+
+		return flag;
+	}
+
+
+	@Override
+	public void setType(final int type){
+
+		// do nothing
+	}
+
+
+	@Override
+	public int getType(){
+
+		return FOREGROUND_COLOR;
+	}
+
+
+	@Override
+	public boolean isStartInclusive(){
+
+		if (flag == Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+			|| flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+			return true;
+		else
+			return false;
+	}
+
+
+	@Override
+	public boolean isEndInclusive(){
+
+		if (flag == Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+			|| flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+			return true;
+		else
+			return false;
+	}
+
+
+	@Override
+	public void removeSpan(Editable text){
+
+		text.removeSpan(this);
+	}
+
+
+	@Override
+	public void dump(){
+
+		BaseSpan.dump(this);
+	}
+
 
 }

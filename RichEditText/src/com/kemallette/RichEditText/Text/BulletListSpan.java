@@ -7,170 +7,186 @@ import android.text.style.BulletSpan;
 import android.util.Log;
 
 
-public class BulletListSpan extends BulletSpan implements
-    IParagraphSpan{
-	
-	
-	private boolean isFirstBullet = false;
-	private int startPosition, endPosition, color;
-	private float density;
-	
+public class BulletListSpan	extends
+							BulletSpan	implements
+										IParagraphSpan{
 
-	public BulletListSpan(final int startPostion,
-	    final int endPostion, float density, int color,
-	    int gapWidth) {
 
-		super(gapWidth, color);
-		
+	private boolean	isFirstBullet	= false;
+	private int		startPosition, endPosition, color;
+	private float	density;
+
+
+	public BulletListSpan(	final int startPostion,
+							final int endPostion,
+							float density,
+							int color,
+							int gapWidth){
+
+		super(	gapWidth,
+				color);
+
 		startPosition = startPostion;
 		endPosition = endPostion;
 		this.density = density;
-		
+
 	}
-	
+
 
 	@Override
-	public void setSpan(final Editable e) {
+	public void setSpan(final Editable e){
 
 		if (startPosition < 0)
 			startPosition = 0;
-		
+
 		if (!(e.length() < startPosition))
 			if (startPosition > endPosition)
-				Log.e("SPAN",
-				      "StartPosition was after End Position - couldn't set.");
+				Log.e(	"SPAN",
+						"StartPosition was after End Position - couldn't set.");
 			else
-				e.setSpan(this, startPosition, endPosition,
-				          Spanned.SPAN_PARAGRAPH);
+				e.setSpan(	this,
+							startPosition,
+							endPosition,
+							Spanned.SPAN_PARAGRAPH);
 		else
-			Log.e("SPAN",
-			      "DID NOT SET: Start position past EditText length.");
-		
+			Log.e(	"SPAN",
+					"DID NOT SET: Start position past EditText length.");
+
 	}
-	
+
 
 	@Override
-	public int getStartPosition() {
+	public int getStartPosition(){
 
 		return startPosition;
 	}
-	
+
 
 	@Override
-	public int getEndPosition() {
+	public int getEndPosition(){
 
 		return endPosition;
 	}
-	
+
 
 	@Override
-	public void setStartPosition(final int startPos) {
+	public void setStartPosition(final int startPos){
 
 		startPosition = startPos;
-		
+
 	}
-	
+
 
 	@Override
-	public void setEndPosition(final int endPos) {
+	public void setEndPosition(final int endPos){
 
 		endPosition = endPos;
 	}
-	
+
 
 	@Override
-	public void setFlag(final int flag) {
+	public void setFlag(final int flag){
 
 		// Do nothing - must be paragraph span
-		
+
 	}
-	
+
 
 	@Override
-	public int getFlag() {
+	public int getFlag(){
 
 		return Spanned.SPAN_PARAGRAPH;
 	}
-	
+
 
 	@Override
-	public void setType(final int type) {
+	public void setType(final int type){
 
 	}
-	
+
 
 	@Override
-	public int getType() {
+	public int getType(){
 
 		return SpanTypes.BULLET;
 	}
-	
+
 
 	@Override
-	public void removeSpan(Editable text) {
+	public void removeSpan(Editable text){
 
 		text.removeSpan(this);
 	}
-	
 
+
+	/**
+	 * This will return the {@link Spanned} flag that describes start/end
+	 * behavior. This is much more informative than just knowing this is
+	 * Spanned.PARAGRAPH.
+	 * 
+	 * @param bufferEnd
+	 *            - the end position of the current buffer
+	 */
 	@Override
-	public int getFlagSynonym(int bufferEnd) {
+	public int getFlagSynonym(int bufferEnd){
 
 		if (startPosition == bufferEnd
-		    && endPosition == bufferEnd)
+			&& endPosition == bufferEnd)
 			return Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 		else if (startPosition < endPosition
-		    && endPosition == bufferEnd)
+					&& endPosition == bufferEnd)
 			return Spanned.SPAN_INCLUSIVE_INCLUSIVE;
 		else
 			return Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
-		
+
 
 	}
-	
+
 
 	@Override
-	public boolean isStartInclusive() {
-
-		return false;
-	}
-	
-
-	@Override
-	public boolean isEndInclusive() {
-
-		return false;
-	}
-	
-
-	@Override
-	public boolean isStartInclusive(int synonymFlag) {
+	public boolean isStartInclusive(int synonymFlag){
 
 		if (synonymFlag == Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-		        || synonymFlag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+			|| synonymFlag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
 			return true;
 		else
 			return false;
 	}
-	
+
 
 	@Override
-	public boolean isEndInclusive(int synonymFlag) {
+	public boolean isEndInclusive(int synonymFlag){
 
 		if (synonymFlag == Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-		        || synonymFlag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+			|| synonymFlag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
 			return true;
 		else
 			return false;
 	}
-	
+
 
 	@Override
-	public void dump() {
+	public void dump(){
 
-		Span.dump(this);
+		BaseSpan.dump(this);
 	}
-	
+
+
+	@Override
+	public boolean isStartInclusive(){
+
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean isEndInclusive(){
+
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 	// @Override
 	// public void drawLeadingMargin(Canvas c, Paint p, int x,
@@ -208,5 +224,5 @@ public class BulletListSpan extends BulletSpan implements
 	// baseline, bottom, text, start,
 	// end, first, l);
 	// }
-	
+
 }
