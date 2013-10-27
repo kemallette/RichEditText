@@ -4,7 +4,10 @@
 package com.kemallette.RichEditText.Text;
 
 
+import android.text.SpanWatcher;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.util.Log;
 
 import com.kemallette.RichEditText.Widget.RichTextWatcher;
@@ -13,13 +16,15 @@ import com.kemallette.RichEditText.Widget.RichTextWatcher;
 public class RichTextStringBuilder	extends
 									SpannableStringBuilder{
 
-	private static final int	COMPOSING	= 1;
-	private static final int	INSERTING	= 2;
-	private static final int	APPENDING	= 3;
-	private static final int	DELETING	= 4;
+	private static final String		TAG			= "retStringBuilder";
+
+	private static final int		COMPOSING	= 1;
+	private static final int		INSERTING	= 2;
+	private static final int		APPENDING	= 3;
+	private static final int		DELETING	= 4;
 
 
-	private RichTextWatcher		mWatcher;
+	private final RichTextWatcher	mWatcher;
 
 
 	public RichTextStringBuilder(	final CharSequence source,
@@ -27,7 +32,98 @@ public class RichTextStringBuilder	extends
 
 		super(source);
 
+		final int end = (source.length() == 0) ? 0 : source.length() - 1;
+		Log.d(	TAG,
+				"Setting span in constructor on this CharSequence:   "
+					+ source);
+
+		setSpan(new SpanWatcher(){
+
+					@Override
+					public void onSpanRemoved(final Spannable text,
+												final Object what,
+												final int start,
+												final int end){
+
+						if (what != null
+							&& what instanceof ISpan)
+							Log.v(	TAG,
+									"\n\n---Span Removed---\n"
+										+ what.getClass()
+												.getCanonicalName()
+										+ "\nText: "
+										+ text
+										+
+										"\nStart: "
+										+ start
+										+
+										"\nEnd: "
+										+ end);
+
+					}
+
+
+					@Override
+					public void onSpanChanged(final Spannable text,
+												final Object what,
+												final int ostart,
+												final int oend,
+												final int nstart,
+												final int nend){
+
+						if (what != null
+							&& what instanceof ISpan)
+							Log.v(	TAG,
+									"\n~~~Span Changed~~~\n"
+										+ what.getClass()
+												.getCanonicalName()
+										+ "\nText: "
+										+ text
+										+
+										"\nOriginal Start: "
+										+ ostart
+										+
+										"\nOriginal End: "
+										+ oend
+										+
+										"\nNew Start: "
+										+ nstart
+										+
+										"\nNew End: "
+										+ nend);
+
+					}
+
+
+					@Override
+					public void onSpanAdded(final Spannable text,
+											final Object what,
+											final int start,
+											final int end){
+
+						if (what != null
+							&& what instanceof ISpan)
+							Log.v(	TAG,
+									"\n+++Span Added+++\n"
+										+ what.getClass()
+												.getCanonicalName()
+										+ "\nText: "
+										+ text
+										+
+										"\nStart: "
+										+ start
+										+
+										"\nEnd: "
+										+ end);
+
+
+					}
+				},
+				0,
+				end,
+				Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		this.mWatcher = mWatcher;
+
 	}
 
 
@@ -57,10 +153,10 @@ public class RichTextStringBuilder	extends
 
 		if (start == end
 			&& start != length()){
-			Log.i(	"EDITOR",
-					"\n**********************************\n"
-						+ "Replacement is inserting"
-						+ "\n**********************************\n");
+			// Log.i( "EDITOR",
+			// "\n**********************************\n"
+			// + "Replacement is inserting"
+			// + "\n**********************************\n");
 
 			action = INSERTING;
 
@@ -74,10 +170,10 @@ public class RichTextStringBuilder	extends
 					&& repEnd == 0){
 			action = DELETING;
 
-			Log.i(	"EDITOR",
-					"\n**********************************\n"
-						+ "Replacement is Deleting"
-						+ "\n**********************************\n");
+			// Log.i( "EDITOR",
+			// "\n**********************************\n"
+			// + "Replacement is Deleting"
+			// + "\n**********************************\n");
 
 			mWatcher.onBeforeDelete(start,
 									end);
@@ -87,10 +183,10 @@ public class RichTextStringBuilder	extends
 
 			action = APPENDING;
 
-			Log.i(	"EDITOR",
-					"\n**********************************\n"
-						+ "Replacement is Appending"
-						+ "\n**********************************\n");
+			// Log.i( "EDITOR",
+			// "\n**********************************\n"
+			// + "Replacement is Appending"
+			// + "\n**********************************\n");
 
 			mWatcher.onBeforeAppend(end,
 									repText,
@@ -99,10 +195,10 @@ public class RichTextStringBuilder	extends
 		}else{
 			action = COMPOSING;
 
-			Log.i(	"EDITOR",
-					"\n**********************************\n"
-						+ "Replacement is Composing"
-						+ "\n**********************************\n");
+			// Log.i( "EDITOR",
+			// "\n**********************************\n"
+			// + "Replacement is Composing"
+			// + "\n**********************************\n");
 
 
 			mWatcher.onBeforeCompose(	start,
@@ -112,18 +208,19 @@ public class RichTextStringBuilder	extends
 										repEnd);
 		}
 
-		SpannableStringBuilder mString =
-											super.replace(	start,
-															end,
-															repText,
-															repStart,
-															repEnd); // This is
-																		// where
-																		// the
-																		// action
-																		// happens
-																		// in
-																		// super
+		final SpannableStringBuilder mString =
+												super.replace(	start,
+																end,
+																repText,
+																repStart,
+																repEnd); // This
+																			// is
+																			// where
+																			// the
+																			// action
+																			// happens
+																			// in
+																			// super
 
 		mWatcher.afterReplace(	start,
 								end,
@@ -166,20 +263,20 @@ public class RichTextStringBuilder	extends
 
 
 	@Override
-	public void removeSpan(Object what){
+	public void removeSpan(final Object what){
 
 		super.removeSpan(what);
 
-		mWatcher.onSpanRemoved(	this,
-								what,
-								getSpanStart(what),
-								getSpanEnd(what));
+		// mWatcher.onSpanRemoved( this,
+		// what,
+		// getSpanStart(what),
+		// getSpanEnd(what));
 	}
 
 
 	@Override
-	public void setSpan(Object what, int start, int end,
-						int flags){
+	public void setSpan(final Object what, final int start, final int end,
+						final int flags){
 
 
 		super.setSpan(	what,
@@ -187,10 +284,10 @@ public class RichTextStringBuilder	extends
 						end,
 						flags);
 
-		if (mWatcher != null)
-			mWatcher.onSpanAdded(	this,
-									what,
-									start,
-									end);
+		// if (mWatcher != null)
+		// mWatcher.onSpanAdded( this,
+		// what,
+		// start,
+		// end);
 	}
 }

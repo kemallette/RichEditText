@@ -3,6 +3,8 @@ package com.kemallette.RichEditText.Widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 
 
@@ -41,6 +43,13 @@ public class RichEditTextField	extends
 				defStyle);
 
 
+	}
+
+
+	@Override
+	public InputConnection onCreateInputConnection(EditorInfo outAttrs){
+
+		return new RichInputConnection(super.onCreateInputConnection(outAttrs), true);
 	}
 
 
