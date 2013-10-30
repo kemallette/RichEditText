@@ -120,35 +120,11 @@ public class SpanUtil	implements
 						&& SpanUtil.isCombinable(	mSpan,
 													span))
 						return new ISpan[] {
-													mSpan,
+											mSpan,
 											span };
 
 			return null;
 		}
-	}
-
-
-	public static boolean isStartInclusive(ISpan mSpan){
-
-		return false;
-	}
-
-
-	public static boolean isEndInclusive(ISpan mSpan){
-
-		return false;
-	}
-
-
-	public static boolean isStartInclusive(ISpan mSpan, int bufferEnd){
-
-		return false;
-	}
-
-
-	public static boolean isEndInclusive(ISpan mSpan, int bufferEnd){
-
-		return false;
 	}
 
 

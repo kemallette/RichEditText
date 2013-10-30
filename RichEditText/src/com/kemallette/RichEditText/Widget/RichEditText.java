@@ -13,6 +13,7 @@ import android.os.Parcelable;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -59,6 +60,7 @@ public class RichEditText	extends
 											TextWatcher,
 											SelectionChangeListener,
 											SpanTypes{
+
 
 	// Replaces the default edit text factory that produces editables
 	// which our custom editable and listener
@@ -428,14 +430,12 @@ public class RichEditText	extends
 			&& what.getClass() != null
 			&& !what.getClass()
 					.getSimpleName()
-					.equals("ChangeWatcher")){
-
+					.equals("ChangeWatcher"))
 			Log.v(	"EDITOR",
 					"Span Added: "
 						+ what.getClass()
 								.getSimpleName()
 						+ "\n\n");
-		}
 	}
 
 
@@ -466,13 +466,12 @@ public class RichEditText	extends
 			&& what.getClass() != null
 			&& !what.getClass()
 					.getSimpleName()
-					.equals("ChangeWatcher")){
+					.equals("ChangeWatcher"))
 			Log.v(	"EDITOR",
 					"Span Removed: "
 						+ what.getClass()
 								.getSimpleName()
 						+ "\n\n");
-		}
 
 
 	}
@@ -554,15 +553,10 @@ public class RichEditText	extends
 								mEt.getSelectionStart(),
 								mEt.getSelectionEnd());
 
-			}else{
-
-				if (!isStylingApplied(	BOLD,
+			}else if (!isStylingApplied(BOLD,
 										mEt.getSelectionStart(),
 										mEt.getSelectionEnd()))
-					return;
-
-				// TODO: End span coverage
-			}
+				return;
 
 		}else if (id == R.id.italic){
 
@@ -577,55 +571,28 @@ public class RichEditText	extends
 			// isChecked);
 			// }
 		}else if (id == R.id.underline){
-			if (isUserSelectingRange){
-
-				// getAppliedSpans(selectionStart,
-				// selectionEnd);
-
+			if (isUserSelectingRange)
 				updateSpan(	UNDERLINE,
 							selectionStart,
 							selectionEnd,
 							isChecked);
-			}
-		}else if (id == R.id.strikethrough){
-
+		}else if (id == R.id.strikethrough)
 			applySpan(	STRIKE,
 						mEt.getSelectionStart(),
 						mEt.getSelectionEnd(),
 						Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-
-			// if (isUserSelectingRange){
-			//
-			// getAppliedSpans(selectionStart,
-			// selectionEnd);
-			//
-			// updateSpan( STRIKE,
-			// selectionStart,
-			// selectionEnd,
-			// isChecked);
-			// }
-		}else if (id == R.id.bgColor){
-			if (isUserSelectingRange){
-
-				// getAppliedSpans(selectionStart,
-				// selectionEnd);
-
+		else if (id == R.id.bgColor){
+			if (isUserSelectingRange)
 				updateSpan(	BACKGROUND_COLOR,
 							selectionStart,
 							selectionEnd,
 							isChecked);
-			}
 		}else if (id == R.id.fgColor){
-			if (isUserSelectingRange){
-
-				// getAppliedSpans(selectionStart,
-				// selectionEnd);
-
+			if (isUserSelectingRange)
 				updateSpan(	FOREGROUND_COLOR,
 							selectionStart,
 							selectionEnd,
 							isChecked);
-			}
 		}else if (id == R.id.bullet){
 			Log.i(	"EDITOR",
 					"\n\n***********************************\n"
@@ -635,15 +602,11 @@ public class RichEditText	extends
 						+ richStringBuilder
 											.length()
 						+ "\n\n***********************************");
-			if (isUserSelectingRange){
-				// getAppliedSpans(selectionStart,
-				// selectionEnd);
-
+			if (isUserSelectingRange)
 				updateParagraphSpan(BULLET,
 									selectionStart,
 									selectionEnd,
 									isChecked);
-			}
 		}
 	}
 
@@ -663,9 +626,11 @@ public class RichEditText	extends
 	 *            - the ending offset of the test range
 	 * @return
 	 */
-	public static ISpan[] getAppliedSpans(final ISpan[] spans,
-											final int start,
-											final int end){
+	public static ISpan[]
+		getAppliedSpans(final SpannableStringBuilder stringBuilder,
+						final ISpan[] spans,
+						final int start,
+						final int end){
 
 		if (end
 			- start < 0){
@@ -685,11 +650,13 @@ public class RichEditText	extends
 		for (int i = 0; i < iSpans.length; i++){
 
 			isApplied = false;
-
 			final ISpan span = iSpans[i];
 
 			// TODO: Here's the only place I should need to codify the annoying
 			// flag edge cases
+			if (stringBuilder.getSpanStart(span) == end){
+				// if not incl_xxxx, remove
+			}
 
 			if (!isApplied) // doesn't apply, chunk it
 				ArrayUtils.remove(	returnSpans,
@@ -722,10 +689,9 @@ public class RichEditText	extends
 			final ISpan appliedSpan = appliedSpans[i];
 
 			if (ArrayUtils.contains(returnSpans,
-									appliedSpan)){
+									appliedSpan))
 				ArrayUtils.remove(	returnSpans,
 									i);
-			}
 		}
 
 		return returnSpans;
@@ -771,15 +737,14 @@ public class RichEditText	extends
 			Log.wtf(TAG,
 					"end was less than start (rangelength < = ");
 
-		final ISpan[] spans = getAppliedSpans(	getISpans(	start,
+		final ISpan[] spans = getAppliedSpans(	richStringBuilder,
+												getISpans(	start,
 															end),
 												start,
 												end);
 		final ISpan[] returnSpans = ArrayUtils.clone(spans);
 
-		if (!ArrayUtils.isEmpty(spans)){ // Found some ISpans that apply to this
-											// range
-
+		if (!ArrayUtils.isEmpty(spans))
 			for (int i = 0; i < spans.length; i++){
 
 				final ISpan iSpan = spans[i];
@@ -788,10 +753,8 @@ public class RichEditText	extends
 					ArrayUtils.remove(	returnSpans,
 										i);
 			}
-
-		}else{
+		else
 			return null;
-		}
 
 		return spans;
 	}
@@ -833,12 +796,10 @@ public class RichEditText	extends
 		 * inclusive. If start == end, they will also act inclusive.
 		 */
 		if (start != end){
-			if (start != 0){
+			if (start != 0)
 				start -= 1;
-			}
-			if (end != richStringBuilder.length() - 1){
+			if (end != richStringBuilder.length() - 1)
 				end += 1;
-			}
 		}
 		return richStringBuilder
 								.getSpans(	start,
