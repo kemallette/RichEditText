@@ -15,7 +15,6 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +34,6 @@ import android.widget.ToggleButton;
 import com.kemallette.RichEditText.R;
 import com.kemallette.RichEditText.HoloColorPicker.ColorPicker.OnColorChangedListener;
 import com.kemallette.RichEditText.HoloColorPicker.ColorPickerDialog;
-import com.kemallette.RichEditText.Text.BulletListSpan;
 import com.kemallette.RichEditText.Text.FontSpan;
 import com.kemallette.RichEditText.Text.ISpan;
 import com.kemallette.RichEditText.Text.ImgSpan;
@@ -57,7 +55,6 @@ public class RichEditText	extends
 											OnClickListener,
 											OnCheckedChangeListener,
 											RichTextWatcher,
-											TextWatcher,
 											SelectionChangeListener,
 											SpanTypes{
 
@@ -477,38 +474,6 @@ public class RichEditText	extends
 	}
 
 
-	/************************************************************
-	 * 
-	 * Text Changed Listener
-	 * 
-	 *************************************************************/
-	@Override
-	public void afterTextChanged(final Editable s){
-
-
-	}
-
-
-	@Override
-	public void beforeTextChanged(final CharSequence s,
-									final int start,
-									final int count,
-									final int after){
-
-
-	}
-
-
-	@Override
-	public void onTextChanged(final CharSequence s,
-								final int start,
-								final int before,
-								final int count){
-
-
-	}
-
-
 	/***********************************************************
 	 * 
 	 * On Click Listener
@@ -570,44 +535,45 @@ public class RichEditText	extends
 			// selectionEnd,
 			// isChecked);
 			// }
-		}else if (id == R.id.underline){
-			if (isUserSelectingRange)
-				updateSpan(	UNDERLINE,
-							selectionStart,
-							selectionEnd,
-							isChecked);
-		}else if (id == R.id.strikethrough)
-			applySpan(	STRIKE,
-						mEt.getSelectionStart(),
-						mEt.getSelectionEnd(),
-						Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-		else if (id == R.id.bgColor){
-			if (isUserSelectingRange)
-				updateSpan(	BACKGROUND_COLOR,
-							selectionStart,
-							selectionEnd,
-							isChecked);
-		}else if (id == R.id.fgColor){
-			if (isUserSelectingRange)
-				updateSpan(	FOREGROUND_COLOR,
-							selectionStart,
-							selectionEnd,
-							isChecked);
-		}else if (id == R.id.bullet){
-			Log.i(	"EDITOR",
-					"\n\n***********************************\n"
-						+ "Selection Position: "
-						+ Selection.getSelectionStart(richStringBuilder)
-						+ "\nEnd of Buffer: "
-						+ richStringBuilder
-											.length()
-						+ "\n\n***********************************");
-			if (isUserSelectingRange)
-				updateParagraphSpan(BULLET,
-									selectionStart,
-									selectionEnd,
-									isChecked);
 		}
+		// else if (id == R.id.underline){
+		// if (isUserSelectingRange)
+		// updateSpan( UNDERLINE,
+		// selectionStart,
+		// selectionEnd,
+		// isChecked);
+		// }else if (id == R.id.strikethrough)
+		// applySpan( STRIKE,
+		// mEt.getSelectionStart(),
+		// mEt.getSelectionEnd(),
+		// Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+		// else if (id == R.id.bgColor){
+		// if (isUserSelectingRange)
+		// updateSpan( BACKGROUND_COLOR,
+		// selectionStart,
+		// selectionEnd,
+		// isChecked);
+		// }else if (id == R.id.fgColor){
+		// if (isUserSelectingRange)
+		// updateSpan( FOREGROUND_COLOR,
+		// selectionStart,
+		// selectionEnd,
+		// isChecked);
+		// }else if (id == R.id.bullet){
+		// Log.i( "EDITOR",
+		// "\n\n***********************************\n"
+		// + "Selection Position: "
+		// + Selection.getSelectionStart(richStringBuilder)
+		// + "\nEnd of Buffer: "
+		// + richStringBuilder
+		// .length()
+		// + "\n\n***********************************");
+		// if (isUserSelectingRange)
+		// updateParagraphSpan(BULLET,
+		// selectionStart,
+		// selectionEnd,
+		// isChecked);
+		// }
 	}
 
 
@@ -620,20 +586,20 @@ public class RichEditText	extends
 	 * @param spans
 	 *            - ISpans that will be tested to see if they apply to the test
 	 *            range
-	 * @param start
+	 * @param rangeStart
 	 *            - the starting offset of the test range
-	 * @param end
+	 * @param rangeEnd
 	 *            - the ending offset of the test range
 	 * @return
 	 */
 	public static ISpan[]
 		getAppliedSpans(final SpannableStringBuilder stringBuilder,
 						final ISpan[] spans,
-						final int start,
-						final int end){
+						final int rangeStart,
+						final int rangeEnd){
 
-		if (end
-			- start < 0){
+		if (rangeEnd
+			- rangeStart < 0){
 			Log.e(	TAG,
 					"Range was negative, returning empty array");
 			return new ISpan[0];
@@ -646,19 +612,37 @@ public class RichEditText	extends
 		final ISpan[] iSpans = ArrayUtils.clone(spans);
 		final ISpan[] returnSpans = ArrayUtils.clone(iSpans);
 
+		int spanStart;
+		int spanEnd;
 		boolean isApplied;
 		for (int i = 0; i < iSpans.length; i++){
 
 			isApplied = false;
 			final ISpan span = iSpans[i];
+			spanStart = stringBuilder.getSpanStart(span);
+			spanEnd = stringBuilder.getSpanEnd(span);
 
-			// TODO: Here's the only place I should need to codify the annoying
-			// flag edge cases
-			if (stringBuilder.getSpanStart(span) == end){
-				// if not incl_xxxx, remove
+			// TODO: finish flag edge cases:
+			// - span touches buffer end/start
+			// - 0-length span
+			// - spanStart = rangeEnd
+			// - spanEnd = rangeStart
+
+			if (spanStart == spanEnd){ // 0-length span
+
 			}
 
-			if (!isApplied) // doesn't apply, chunk it
+			// spanStart must be INCLUSIVE to apply if span starts on rangeEnd
+			if (spanStart == rangeEnd){
+				isApplied = SpanUtil.isStartInclusive(span);
+			}
+
+			// spanEnd must be INCLUSIVE to apply if span ends on rangeStart
+			if (spanEnd == rangeStart){
+				isApplied = SpanUtil.isEndInclusive(span);
+			}
+
+			if (!isApplied)
 				ArrayUtils.remove(	returnSpans,
 									i);
 		}
@@ -671,18 +655,21 @@ public class RichEditText	extends
 	 * {@link RichEditText#getAppliedSpans(ISpan[], int, int)}.
 	 * 
 	 * @param spans
-	 * @param start
-	 * @param end
+	 * @param rangeStart
+	 * @param rangeEnd
 	 * @return
 	 */
-	public static ISpan[] getUnappliedSpans(final ISpan[] spans,
-											final int start,
-											final int end){
+	public static ISpan[]
+		getUnappliedSpans(final SpannableStringBuilder stringBuilder,
+							final ISpan[] spans,
+							final int rangeStart,
+							final int rangeEnd){
 
 		final ISpan[] returnSpans = ArrayUtils.clone(spans);
-		final ISpan[] appliedSpans = getAppliedSpans(	spans,
-														start,
-														end);
+		final ISpan[] appliedSpans = getAppliedSpans(	stringBuilder,
+														spans,
+														rangeStart,
+														rangeEnd);
 
 		for (int i = 0; i < appliedSpans.length; i++){
 
@@ -706,12 +693,12 @@ public class RichEditText	extends
 	 * 
 	 * 
 	 * @param type
-	 * @param start
-	 * @param end
+	 * @param rangeStart
+	 * @param rangeEnd
 	 */
 	private void removeStyling(final int type,
-								final int start,
-								final int end){
+								final int rangeStart,
+								final int rangeEnd){
 
 		// TODO: remove styling from this range. See docs above for details
 
@@ -719,29 +706,29 @@ public class RichEditText	extends
 
 
 	private boolean isStylingApplied(final int type,
-										final int start,
-										final int end){
+										final int rangeStart,
+										final int rangeEnd){
 
-		return (ArrayUtils.isEmpty(getAppliedStyling(	type,
-														start,
-														end))) ? false : true;
+		return !ArrayUtils.isEmpty(getAppliedStyling(	type,
+														rangeStart,
+														rangeEnd));
 	}
 
 
 	private ISpan[] getAppliedStyling(final int type,
-										final int start,
-										final int end){
+										final int rangeStart,
+										final int rangeEnd){
 
-		if (end
-			- start < 0)
+		if (rangeEnd
+			- rangeStart < 0)
 			Log.wtf(TAG,
 					"end was less than start (rangelength < = ");
 
 		final ISpan[] spans = getAppliedSpans(	richStringBuilder,
-												getISpans(	start,
-															end),
-												start,
-												end);
+												getISpans(	rangeStart,
+															rangeEnd),
+												rangeStart,
+												rangeEnd);
 		final ISpan[] returnSpans = ArrayUtils.clone(spans);
 
 		if (!ArrayUtils.isEmpty(spans))
@@ -778,33 +765,44 @@ public class RichEditText	extends
 
 
 	/**
-	 * Returns any spans in or on this range inclusively; meaning any spans that
-	 * start on end, end on start or overlap this range.
+	 * Returns any {@link ISpan}s in or on this range inclusively; meaning any spans that
+	 * start on rangeEnd, end on rangeStart or overlap this range.
 	 * 
-	 * @param start
-	 * @param end
+	 * @param rangeStart
+	 * @param rangeEnd
 	 * @return
 	 */
-	private ISpan[] getISpans(int start, int end){
+	private ISpan[] getISpans(final int rangeStart, final int rangeEnd){
+
+		return getISpans(	ISpan.class,
+							rangeStart,
+							rangeEnd);
+	}
+
+
+	private <T> T[] getISpans(	final Class<T> spanClass,
+								int rangeStart,
+								int rangeEnd){
 
 		/*
-		 * About getSpans:
+		 * About SpannableStringBuilder#getSpans(Class, int, int):
 		 * 
-		 * Start and end are normally exclusive meaning spans that end on start
-		 * or start on end will not be returned. However, if start or end fall
-		 * on buffer start (0) or buffer end (length-1), they will act
-		 * inclusive. If start == end, they will also act inclusive.
+		 * getSpans returns spans between start and end exclusively meaning
+		 * spans that end on rangeStart or start on rangeEnd will not be
+		 * returned. However, if start or end fall on buffer start (0) or buffer
+		 * end (length-1), they will act inclusive. If rangeStart == rangeEnd,
+		 * they will also act inclusive.
 		 */
-		if (start != end){
-			if (start != 0)
-				start -= 1;
-			if (end != richStringBuilder.length() - 1)
-				end += 1;
+		if (rangeStart != rangeEnd){
+			if (rangeStart != 0)
+				rangeStart -= 1;
+			if (rangeEnd != richStringBuilder.length() - 1)
+				rangeEnd += 1;
 		}
 		return richStringBuilder
-								.getSpans(	start,
-											end,
-											ISpan.class);
+								.getSpans(	rangeStart,
+											rangeEnd,
+											spanClass);
 	}
 
 
@@ -822,6 +820,242 @@ public class RichEditText	extends
 								.getSpans(	start,
 											end,
 											Object.class);
+	}
+
+
+	/***********************************************************
+	 * 
+	 * Document BaseSpan Tracking/Placing Helpers
+	 * 
+	 ************************************************************/
+
+	/*
+	 * private void getAjacentSpans(final int start, final int end){
+	 * 
+	 * ajacentSpans = null;
+	 * 
+	 * ajacentSpans = richStringBuilder .getSpans( start, end, ISpan.class);
+	 * 
+	 * updateSpanPositions(ajacentSpans); }
+	 */
+
+
+	/**
+	 * Used for INSERTION/APPEND
+	 */
+	/*
+	 * private void getAppliedSpans(int position){
+	 * 
+	 * if (position < 1) position = 0;
+	 * 
+	 * getAjacentSpans(position - 1, position + 1);
+	 * 
+	 * appliedSpans = null;
+	 * 
+	 * 
+	 * if (ajacentSpans != null){ // check ajacentSpans for any that would //
+	 * apply to this position
+	 * 
+	 * appliedSpans = new ISpan[0];
+	 * 
+	 * for (final ISpan span : ajacentSpans) if (isSpanApplied( span, position))
+	 * appliedSpans = ArrayUtils.add( appliedSpans, span);
+	 * 
+	 * }
+	 * 
+	 * if (appliedSpans != null){ Log.i( "EDITOR",
+	 * "\n-------------------------------------------\n" + "APPLIED SPANS" +
+	 * "\n-------------------------------------------\n\n"); for (final ISpan
+	 * span : ajacentSpans) span.dump(); } }
+	 */
+
+	/*	*//**
+	 */
+	/*
+	 * private void getAppliedSpans(int start, final int end){
+	 * 
+	 * if (start < 1) start = 0;
+	 * 
+	 * if (end < start) Log.e( "EDITOR",
+	 * "The range end is less than the range start!");
+	 * 
+	 * if (end == start) getAppliedSpans(end); // ended up with a position
+	 * instead of a range // so this is an // insertion/append else{
+	 * 
+	 * appliedSpans = null;
+	 * 
+	 * getAjacentSpans(start, end);
+	 * 
+	 * if (ajacentSpans != null){ // check ajacentSpans for any that would //
+	 * apply to this range
+	 * 
+	 * appliedSpans = new ISpan[0];
+	 * 
+	 * for (final ISpan span : ajacentSpans) if (isSpanApplied( span, start,
+	 * end)) appliedSpans = ArrayUtils.add( appliedSpans, span); }
+	 * 
+	 * if (appliedSpans != null){ Log.i( "EDITOR",
+	 * "\n-------------------------------------------\n" + "APPLIED SPANS" +
+	 * "\n-------------------------------------------\n\n"); for (final ISpan
+	 * span : ajacentSpans) span.dump(); } } }
+	 */
+	// private boolean isSpanApplied(final ISpan span, final int position){
+	//
+	// // BaseSpan engulfs range - regardless of type, it's applied
+	// if (span.getStartPosition() < position
+	// && span.getEndPosition() > position)
+	// return true;
+	//
+	// // If it's a paragraph span and
+	// else if (span.getFlag() == Spanned.SPAN_PARAGRAPH){
+	//
+	// final int synFlag =
+	// ((IParagraphSpan) span).getFlagSynonym(cursorPosition);
+	//
+	// if (span.getStartPosition() == position
+	// && ((IParagraphSpan) span).isStartInclusive(synFlag)
+	// || span.getEndPosition() == position
+	// && ((IParagraphSpan) span).isEndInclusive(synFlag))
+	// return true;
+	//
+	// }else if (span.getStartPosition() == position
+	// && span.isStartInclusive()
+	// || span.getEndPosition() == position
+	// && span.isEndInclusive())
+	// return true;
+	//
+	// return false;
+	// }
+	//
+	//
+	// private boolean isSpanApplied(final ISpan span,
+	// final int start,
+	// final int end){
+	//
+	// if (span.getFlag() == Spanned.SPAN_PARAGRAPH){
+	//
+	// final int synFlag = ((IParagraphSpan)
+	// span).getFlagSynonym(cursorPosition);
+	//
+	// if (span.getEndPosition() > start){
+	//
+	// if (span.getStartPosition() < end
+	// || span.getStartPosition() == end
+	// && ((IParagraphSpan) span).isStartInclusive(synFlag))
+	// return true;
+	//
+	// }else if (span.getEndPosition() == start
+	// && ((IParagraphSpan) span).isEndInclusive(synFlag))
+	// return true;
+	//
+	// }else if (span.getEndPosition() > start){
+	//
+	// if (span.getStartPosition() < end
+	// || span.getStartPosition() == end
+	// && ((FontSpan) span).isStartInclusive())
+	// return true;
+	//
+	// }else if (span.getEndPosition() == start
+	// && span.isEndInclusive())
+	// return true;
+	//
+	// return false;
+	// }
+	//
+	//
+	// /**
+	// * Checks the text immediately surrounding the current selection to see if
+	// * the span type is applied to the text.
+	// *
+	// * @param type
+	// * @return
+	// */
+	// private boolean isSpanTypeApplied(final int type){
+	//
+	// final ISpan[] mSpans = richStringBuilder
+	// .getSpans( mEt.getSelectionStart(),
+	// mEt.getSelectionEnd(),
+	// ISpan.class);
+	// if (mSpans.length < 1)
+	// return false;
+	//
+	// for (final ISpan span : mSpans){
+	//
+	// if (span.getType() == type)
+	// return true;
+	//
+	// if ((type == BOLD || type == ITALIC)
+	// && type == BOLD_ITALIC)
+	// return true;
+	// }
+	//
+	// return false;
+	// }
+
+
+	private ISpan makeSpan(final int type,
+							final int start,
+							final int end,
+							final int flag){
+
+		switch(type){
+
+		// Appearance Spans
+			case BOLD:
+			case ITALIC:
+			case BOLD_ITALIC:
+				return new TextStyleSpan(	type,
+											start,
+											end,
+											flag);
+
+			case UNDERLINE:
+				return new UnderliningSpan(	start,
+											end,
+											flag);
+
+			case STRIKE:
+				return new StrikeSpan(	start,
+										end,
+										flag);
+
+			case SUPERSCRIPT:
+				return new TextSuperscriptSpan(	start,
+												end,
+												flag);
+
+			case SUBSCRIPT:
+				return new TextSubscriptSpan(	start,
+												end,
+												flag);
+			case IMAGE:
+				return new ImgSpan(	flag,
+									mDrawable);
+			case BACKGROUND_COLOR:
+				return new TextBackgroundColorSpan(	start,
+													end,
+													flag,
+													bgColor);
+			case FOREGROUND_COLOR:
+				return new TextForgroundColorSpan(	start,
+													end,
+													flag,
+													fgColor);
+			case FONT:
+				return new FontSpan(flag,
+									mFontFamily);
+
+				// // Paragraph Spans
+				// case BULLET:
+				// return new BulletListSpan( density,
+				// bulletColor,
+				// bulletMarginWidth);
+
+			case OL:
+				break;
+		}
+
+		return null;
 	}
 
 
@@ -868,99 +1102,6 @@ public class RichEditText	extends
 		mLayout.clearFocus();
 
 		mEt.requestFocus();
-	}
-
-
-	private void initAttributes(final AttributeSet attrs){
-
-		// TODO: funnel attributes to RichEditTextField
-
-		Log.i(	TAG,
-				"\n \nINIT ATTRIBUTES \n \n");
-
-		if (attrs != null)
-			for (int i = 0; i < attrs.getAttributeCount(); i++){
-
-				fontName =
-							attrs.getAttributeValue("http://schemas.android.com/apk/res-auto",
-													"fontName");
-
-				showClearButton =
-									attrs.getAttributeBooleanValue(	"http://schemas.android.com/apk/res-auto",
-																	"showClearButton",
-																	true);
-
-				showFormattingOptions =
-										attrs.getAttributeBooleanValue(	"http://schemas.android.com/apk/res-auto",
-																		"showFormattingOptions",
-																		true);
-
-				Log.i(	TAG,
-						"Attribute\n Name: "
-							+ attrs.getAttributeName(i)
-							+ "       Value: "
-							+ attrs.getAttributeValue(i));
-			}
-
-		showFormattingOptions(showFormattingOptions);
-		showClearButton(showClearButton);
-
-		if (showFormattingOptions)
-			initFormattingOptions();
-
-		if (showClearButton)
-			mClearButton.setOnClickListener(this);
-
-		if (fontName != null)
-			setFont();
-
-	}
-
-
-	private void initFormattingOptions(){
-
-		mEt.setEditableFactory(new TextFactory());
-		mEt.addTextChangedListener(this);
-		mEt.setOnSelectionChangedListener(this);
-
-		btnSubScript.setOnClickListener(this);
-		btnSuperScript.setOnClickListener(this);
-
-		btnBgPicker.setOnClickListener(this);
-		btnFgPicker.setOnClickListener(this);
-
-		tgBold.setOnCheckedChangeListener(this);
-		tgItalic.setOnCheckedChangeListener(this);
-		tgUnderline.setOnCheckedChangeListener(this);
-		tgStrikethrough.setOnCheckedChangeListener(this);
-		tgBgColor.setOnCheckedChangeListener(this);
-		tgFgColor.setOnCheckedChangeListener(this);
-
-		tgBold.setTag(BOLD);
-		tgItalic.setTag(ITALIC);
-		tgUnderline.setTag(UNDERLINE);
-		tgStrikethrough.setTag(STRIKE);
-		tgBgColor.setTag(BACKGROUND_COLOR);
-		tgFgColor.setTag(FOREGROUND_COLOR);
-
-		tgTest.setOnCheckedChangeListener(this);
-		tgBullet.setOnCheckedChangeListener(this);
-		tgOl.setOnCheckedChangeListener(this);
-		tgAlignLeft.setOnCheckedChangeListener(this);
-		tgAlignCenter.setOnCheckedChangeListener(this);
-		tgAlignRight.setOnCheckedChangeListener(this);
-
-		tgBullet.setTag(BULLET);
-		tgOl.setTag(OL);
-		tgAlignCenter.setTag(ALIGN_CENTER);
-
-		mToggles =
-					new ToggleButton[] { tgBold,
-										tgItalic,
-										tgUnderline,
-										tgStrikethrough,
-										tgBgColor,
-										tgFgColor };
 	}
 
 
@@ -1086,616 +1227,95 @@ public class RichEditText	extends
 	}
 
 
-	/***********************************************************
-	 * 
-	 * Document BaseSpan Tracking/Placing Helpers
-	 * 
-	 ************************************************************/
+	private void initAttributes(final AttributeSet attrs){
 
-	/*
-	 * private void getAjacentSpans(final int start, final int end){
-	 * 
-	 * ajacentSpans = null;
-	 * 
-	 * ajacentSpans = richStringBuilder .getSpans( start, end, ISpan.class);
-	 * 
-	 * updateSpanPositions(ajacentSpans); }
-	 */
+		// TODO: funnel attributes to RichEditTextField
 
+		Log.i(	TAG,
+				"\n \nINIT ATTRIBUTES \n \n");
 
-	/**
-	 * Used for INSERTION/APPEND
-	 */
-	/*
-	 * private void getAppliedSpans(int position){
-	 * 
-	 * if (position < 1) position = 0;
-	 * 
-	 * getAjacentSpans(position - 1, position + 1);
-	 * 
-	 * appliedSpans = null;
-	 * 
-	 * 
-	 * if (ajacentSpans != null){ // check ajacentSpans for any that would //
-	 * apply to this position
-	 * 
-	 * appliedSpans = new ISpan[0];
-	 * 
-	 * for (final ISpan span : ajacentSpans) if (isSpanApplied( span, position))
-	 * appliedSpans = ArrayUtils.add( appliedSpans, span);
-	 * 
-	 * }
-	 * 
-	 * if (appliedSpans != null){ Log.i( "EDITOR",
-	 * "\n-------------------------------------------\n" + "APPLIED SPANS" +
-	 * "\n-------------------------------------------\n\n"); for (final ISpan
-	 * span : ajacentSpans) span.dump(); } }
-	 */
+		if (attrs != null)
+			for (int i = 0; i < attrs.getAttributeCount(); i++){
 
-	/*	*//**
-	 * TODO implement paragraph flag checking Used for RANGE of Characters
-	 */
-	/*
-	 * private void getAppliedSpans(int start, final int end){
-	 * 
-	 * if (start < 1) start = 0;
-	 * 
-	 * if (end < start) Log.e( "EDITOR",
-	 * "The range end is less than the range start!");
-	 * 
-	 * if (end == start) getAppliedSpans(end); // ended up with a position
-	 * instead of a range // so this is an // insertion/append else{
-	 * 
-	 * appliedSpans = null;
-	 * 
-	 * getAjacentSpans(start, end);
-	 * 
-	 * if (ajacentSpans != null){ // check ajacentSpans for any that would //
-	 * apply to this range
-	 * 
-	 * appliedSpans = new ISpan[0];
-	 * 
-	 * for (final ISpan span : ajacentSpans) if (isSpanApplied( span, start,
-	 * end)) appliedSpans = ArrayUtils.add( appliedSpans, span); }
-	 * 
-	 * if (appliedSpans != null){ Log.i( "EDITOR",
-	 * "\n-------------------------------------------\n" + "APPLIED SPANS" +
-	 * "\n-------------------------------------------\n\n"); for (final ISpan
-	 * span : ajacentSpans) span.dump(); } } }
-	 */
-	// private boolean isSpanApplied(final ISpan span, final int position){
-	//
-	// // BaseSpan engulfs range - regardless of type, it's applied
-	// if (span.getStartPosition() < position
-	// && span.getEndPosition() > position)
-	// return true;
-	//
-	// // If it's a paragraph span and
-	// else if (span.getFlag() == Spanned.SPAN_PARAGRAPH){
-	//
-	// final int synFlag =
-	// ((IParagraphSpan) span).getFlagSynonym(cursorPosition);
-	//
-	// if (span.getStartPosition() == position
-	// && ((IParagraphSpan) span).isStartInclusive(synFlag)
-	// || span.getEndPosition() == position
-	// && ((IParagraphSpan) span).isEndInclusive(synFlag))
-	// return true;
-	//
-	// }else if (span.getStartPosition() == position
-	// && span.isStartInclusive()
-	// || span.getEndPosition() == position
-	// && span.isEndInclusive())
-	// return true;
-	//
-	// return false;
-	// }
-	//
-	//
-	// private boolean isSpanApplied(final ISpan span,
-	// final int start,
-	// final int end){
-	//
-	// if (span.getFlag() == Spanned.SPAN_PARAGRAPH){
-	//
-	// final int synFlag = ((IParagraphSpan)
-	// span).getFlagSynonym(cursorPosition);
-	//
-	// if (span.getEndPosition() > start){
-	//
-	// if (span.getStartPosition() < end
-	// || span.getStartPosition() == end
-	// && ((IParagraphSpan) span).isStartInclusive(synFlag))
-	// return true;
-	//
-	// }else if (span.getEndPosition() == start
-	// && ((IParagraphSpan) span).isEndInclusive(synFlag))
-	// return true;
-	//
-	// }else if (span.getEndPosition() > start){
-	//
-	// if (span.getStartPosition() < end
-	// || span.getStartPosition() == end
-	// && ((FontSpan) span).isStartInclusive())
-	// return true;
-	//
-	// }else if (span.getEndPosition() == start
-	// && span.isEndInclusive())
-	// return true;
-	//
-	// return false;
-	// }
-	//
-	//
-	// /**
-	// * Checks the text immediately surrounding the current selection to see if
-	// * the span type is applied to the text.
-	// *
-	// * @param type
-	// * @return
-	// */
-	// private boolean isSpanTypeApplied(final int type){
-	//
-	// final ISpan[] mSpans = richStringBuilder
-	// .getSpans( mEt.getSelectionStart(),
-	// mEt.getSelectionEnd(),
-	// ISpan.class);
-	// if (mSpans.length < 1)
-	// return false;
-	//
-	// for (final ISpan span : mSpans){
-	//
-	// if (span.getType() == type)
-	// return true;
-	//
-	// if ((type == BOLD || type == ITALIC)
-	// && type == BOLD_ITALIC)
-	// return true;
-	// }
-	//
-	// return false;
-	// }
-	//
-	//
-	// private void updateSpanPositions(final ISpan[] mSpans){
-	//
-	// if (mSpans != null)
-	// for (final ISpan span : mSpans){
-	// span.setStartPosition(richStringBuilder
-	// .getSpanStart(span));
-	// span.setEndPosition(richStringBuilder
-	// .getSpanEnd(span));
-	// }
-	// }
-	//
-	//
-	// private void updateAppliedSpans(final int start, final int end){
-	//
-	// if (appliedSpans != null)
-	// updateSpanPositions(appliedSpans);
-	//
-	// int toggleType = 0;
-	//
-	// for (final ToggleButton mToggle : mToggles){
-	//
-	// if (mToggle.getTag() != null)
-	// toggleType = ((Integer) mToggle.getTag()).intValue();
-	// else
-	// Log.e( "EDITOR",
-	// "A toggle button with text, "
-	// + mToggle.getText()
-	// + ", was not tagged with its type.");
-	//
-	// if (!SpanUtil.isParagraphSpanType(toggleType))
-	// updateSpan( toggleType,
-	// start,
-	// end,
-	// mToggle.isChecked());
-	// else
-	// updateParagraphSpan(toggleType,
-	// start,
-	// end,
-	// mToggle.isChecked());
-	// }
-	// }
+				fontName =
+							attrs.getAttributeValue("http://schemas.android.com/apk/res-auto",
+													"fontName");
 
+				showClearButton =
+									attrs.getAttributeBooleanValue(	"http://schemas.android.com/apk/res-auto",
+																	"showClearButton",
+																	true);
 
-	private void updateSpan(final int type,
-							final int start,
-							final int end,
-							final boolean isToggled){
+				showFormattingOptions =
+										attrs.getAttributeBooleanValue(	"http://schemas.android.com/apk/res-auto",
+																		"showFormattingOptions",
+																		true);
 
-		// ISpan[] mSpans = isSpanTypeApplied(type);
-		//
-		// if (mSpans != null
-		// && mSpans.length > 1)
-		// mSpans = combineOverlappingSpans(mSpans);
-		//
-		// if (mSpans != null
-		// && isUserSelectingRange
-		// && isToggled)
-		// mSpans = SpanUtil.isSpansCoveringRange( mSpans,
-		// type,
-		// start,
-		// end);
-		//
-		// final boolean isApplied = (mSpans != null);
-		//
-		// if (isToggled
-		// && !isApplied){ // Is Toggled, but not applied - apply it
-		//
-		// boolean appliedExtended = false;
-		//
-		// for (final ISpan mSpan : ajacentSpans)
-		// if (mSpan.getType() == type
-		// && mSpan.getEndPosition() == start){
-		//
-		// mSpan.setEndPosition(start
-		// + (end - start));
-		// SpanUtil.reApplySpan( mSpan,
-		// richStringBuilder);
-		//
-		// appliedExtended = true;
-		// break;
-		// }
-		//
-		// if (!appliedExtended)
-		// applySpan( type,
-		// start,
-		// end,
-		// Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		//
-		// }else if (!isToggled
-		// && isApplied
-		// && mSpans.length > 0) // Is applied, but not toggled. Remove
-		// // if within start/end (or equal to
-		// // start/end if that end is
-		// // EXCLUSIVE)
-		// for (final ISpan mSpan : mSpans)
-		// if (mSpan.getStartPosition() >= start){
-		// if (mSpan.getEndPosition() <= end)
-		// richStringBuilder
-		// .removeSpan(mSpan);
-		// else if (mSpan.getStartPosition() == end){
-		// SpanUtil.setSpanStartExclusive(mSpan);
-		// SpanUtil.reApplySpan( mSpan,
-		// richStringBuilder);
-		// }else
-		// splitSpan( mSpan,
-		// start,
-		// end);
-		// }else if (mSpan.getEndPosition() == start){
-		// SpanUtil.setSpanEndExclusive(mSpan);
-		// SpanUtil.reApplySpan( mSpan,
-		// richStringBuilder);
-		// }else
-		// splitSpan( mSpan,
-		// start,
-		// end);
-	}
-
-
-	private void updateParagraphSpan(final int type,
-										final int start,
-										final int end,
-										final boolean isToggled){
-
-		// TODO: update paragraph BaseSpan - this is were the magic happens -
-		// see
-		// what I did with
-		// updateSpan
-	}
-
-
-	private void applySpan(final int type,
-							final int start,
-							final int end,
-							final int flag){
-
-		final ISpan mSpan = makeSpan(	type,
-										start,
-										end,
-										flag);
-
-		if (mSpan != null)
-			mSpan.setSpan(richStringBuilder);
-	}
-
-
-	private ISpan makeSpan(final int type,
-							final int start,
-							final int end,
-							final int flag){
-
-		switch(type){
-
-		// Appearance Spans
-			case BOLD:
-			case ITALIC:
-			case BOLD_ITALIC:
-				return new TextStyleSpan(	type,
-											start,
-											end,
-											flag);
-
-			case UNDERLINE:
-				return new UnderliningSpan(	start,
-											end,
-											flag);
-
-			case STRIKE:
-				return new StrikeSpan(	start,
-										end,
-										flag);
-
-			case SUPERSCRIPT:
-				return new TextSuperscriptSpan(	start,
-												end,
-												flag);
-
-			case SUBSCRIPT:
-				return new TextSubscriptSpan(	start,
-												end,
-												flag);
-			case IMAGE:
-				return new ImgSpan(	start,
-									end,
-									flag,
-									mDrawable);
-			case BACKGROUND_COLOR:
-				return new TextBackgroundColorSpan(	start,
-													end,
-													flag,
-													bgColor);
-			case FOREGROUND_COLOR:
-				return new TextForgroundColorSpan(	start,
-													end,
-													flag,
-													fgColor);
-			case FONT:
-				return new FontSpan(start,
-									end,
-									flag,
-									mFontFamily);
-
-				// Paragraph Spans
-			case BULLET:
-				return new BulletListSpan(	start,
-											end,
-											density,
-											bulletColor,
-											bulletMarginWidth);
-
-			case OL:
-				break;
-		}
-
-		return null;
-	}
-
-
-	// TODO: Implement Paragraph SplitSpan
-	private void splitSpan(final ISpan mSpan, final int start, final int end){
-
-		if (mSpan != null){
-
-			richStringBuilder
-								.removeSpan(mSpan);
-
-			if (mSpan.getStartPosition() >= start
-				&& mSpan.getEndPosition() <= end)
-				Log.e(	"EDITOR",
-						"A span that should be removed was sent to split");
-			else if (mSpan.getStartPosition() < start
-						&& mSpan.getEndPosition() > end){
-
-				int flag;
-
-				// Apply first span (Covers start and back)
-				flag =
-						(mSpan.isStartInclusive())
-													? Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-													: Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-				applySpan(	mSpan.getType(),
-							mSpan.getStartPosition(),
-							start,
-							flag);
-
-
-				// Apply second BaseSpan (Covers end and forward)
-				flag =
-						(mSpan.isEndInclusive())
-												? Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-												: Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-
-				applySpan(	mSpan.getType(),
-							end,
-							mSpan.getEndPosition(),
-							flag);
-
-
-			}else if (mSpan.getStartPosition() >= start)
-				// spnstart = end
-				applySpan(	mSpan.getType(),
-							end,
-							mSpan.getEndPosition(),
-							mSpan.getFlag());
-			else if (mSpan.getStartPosition() < start)
-				// spnEnd = start
-				applySpan(	mSpan.getType(),
-							mSpan.getStartPosition(),
-							start,
-							mSpan.getFlag());
-
-		}else
-			Log.e(	"EDITOR",
-					"Can't split a null span!");
-	}
-
-
-	private ISpan[] combineOverlappingSpans(ISpan[] mSpans){
-
-		ISpan[] testSpans = ArrayUtils.clone(mSpans);
-
-		do
-			if (mSpans.length < 2)
-				testSpans = null;
-			else{
-
-				testSpans = SpanUtil.isCombinable(mSpans);
-
-				if (testSpans != null){
-
-
-					mSpans = ArrayUtils.removeElement(	mSpans,
-														testSpans[0]);
-					mSpans = ArrayUtils.removeElement(	mSpans,
-														testSpans[1]);
-					appliedSpans = ArrayUtils.removeElement(appliedSpans,
-															testSpans[0]);
-					appliedSpans = ArrayUtils.removeElement(appliedSpans,
-															testSpans[1]);
-
-
-					mSpans =
-								ArrayUtils.add(	mSpans,
-												combineOverlappingSpans(testSpans[0],
-																		testSpans[1]));
-
-					richStringBuilder
-										.removeSpan(testSpans[0]);
-					richStringBuilder
-										.removeSpan(testSpans[1]);
-
-
-					testSpans = ArrayUtils.clone(mSpans);
-				}
+				Log.i(	TAG,
+						"Attribute\n Name: "
+							+ attrs.getAttributeName(i)
+							+ "       Value: "
+							+ attrs.getAttributeValue(i));
 			}
-		while (testSpans != null);
 
-		return mSpans;
+		showFormattingOptions(showFormattingOptions);
+		showClearButton(showClearButton);
+
+		if (showFormattingOptions)
+			initFormattingOptions();
+
+		if (showClearButton)
+			mClearButton.setOnClickListener(this);
+
+		if (fontName != null)
+			setFont();
+
 	}
 
 
-	// TODO: Post 1.0 For BulletSpan (UL) - They can be nested in the future,
-	// but only if the
-	// overlap includes a Tab
-	// after the \n
-	// denoting a sub-bullet.
-	private ISpan
-		combineOverlappingSpans(final ISpan mSpan1, final ISpan mSpan2){
+	private void initFormattingOptions(){
 
-		if (mSpan1.getType() != mSpan2.getType()){
-			Log.e(	"EDITOR",
-					"Cannot combineOverlappingSpans: Spans are different types");
-			return null;
-		}
+		mEt.setEditableFactory(new TextFactory());
+		mEt.setOnSelectionChangedListener(this);
 
-		int startFlag;
-		int endFlag;
-		int newFlag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-		int start = mSpan1.getStartPosition();
-		int end = mSpan2.getEndPosition();
+		btnSubScript.setOnClickListener(this);
+		btnSuperScript.setOnClickListener(this);
 
-		// Find closest start and flag
-		if (mSpan1.getStartPosition() < mSpan2.getStartPosition())
-			startFlag =
-						(mSpan1.isStartInclusive()) ? ISpan.INCLUSIVE
-													: ISpan.EXCLUSIVE;
-		else if (mSpan1.getStartPosition() == mSpan2.getStartPosition())
-			// if either starts
-			// are
-			// inclusive, start
-			// should be inclusive
-			startFlag =
-						(mSpan1.isStartInclusive() || mSpan2.isStartInclusive())
-																				? ISpan.INCLUSIVE
-																				: ISpan.EXCLUSIVE;
-		else{ // Span2 start is lower
+		btnBgPicker.setOnClickListener(this);
+		btnFgPicker.setOnClickListener(this);
 
-			startFlag =
-						(mSpan2.isStartInclusive()) ? ISpan.INCLUSIVE
-													: ISpan.EXCLUSIVE;
-			start = mSpan2.getStartPosition();
-		}
+		tgBold.setOnCheckedChangeListener(this);
+		tgItalic.setOnCheckedChangeListener(this);
+		tgUnderline.setOnCheckedChangeListener(this);
+		tgStrikethrough.setOnCheckedChangeListener(this);
+		tgBgColor.setOnCheckedChangeListener(this);
+		tgFgColor.setOnCheckedChangeListener(this);
 
-		// Find farthest end and flag
-		if (mSpan1.getEndPosition() > mSpan2.getEndPosition()){ // Span1 end is
-																// higher
+		tgBold.setTag(BOLD);
+		tgItalic.setTag(ITALIC);
+		tgUnderline.setTag(UNDERLINE);
+		tgStrikethrough.setTag(STRIKE);
+		tgBgColor.setTag(BACKGROUND_COLOR);
+		tgFgColor.setTag(FOREGROUND_COLOR);
 
-			endFlag =
-						(mSpan1.isEndInclusive()) ? ISpan.INCLUSIVE
-													: ISpan.EXCLUSIVE;
-			end = mSpan1.getEndPosition();
+		tgTest.setOnCheckedChangeListener(this);
+		tgBullet.setOnCheckedChangeListener(this);
+		tgOl.setOnCheckedChangeListener(this);
+		tgAlignLeft.setOnCheckedChangeListener(this);
+		tgAlignCenter.setOnCheckedChangeListener(this);
+		tgAlignRight.setOnCheckedChangeListener(this);
 
-		}else if (mSpan1.getEndPosition() == mSpan2.getEndPosition())
-			endFlag =
-						(mSpan1.isEndInclusive() || mSpan2.isEndInclusive())
-																			? ISpan.INCLUSIVE
-																			: ISpan.EXCLUSIVE;
-		else
-			endFlag =
-						(mSpan2.isEndInclusive()) ? ISpan.INCLUSIVE
-													: ISpan.EXCLUSIVE;
+		tgBullet.setTag(BULLET);
+		tgOl.setTag(OL);
+		tgAlignCenter.setTag(ALIGN_CENTER);
 
-		switch(startFlag){
-			case ISpan.EXCLUSIVE:
-
-				newFlag =
-							(endFlag == ISpan.EXCLUSIVE)
-														? Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-														: Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
-				break;
-
-			case ISpan.INCLUSIVE:
-
-				newFlag =
-							(endFlag == ISpan.EXCLUSIVE)
-														? Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-														: Spanned.SPAN_INCLUSIVE_INCLUSIVE;
-				break;
-		}
-
-		return makeSpan(mSpan1.getType(),
-						start,
-						end,
-						newFlag);
-	}
-
-
-	/***********************************************************
-	 * 
-	 * Button Toggle Helpers
-	 * 
-	 ************************************************************/
-	private void updateToggledStates(final int selPosition){
-
-		// getAppliedSpans(selPosition);
-
-		if (appliedSpans != null){
-
-			int toggleType;
-
-			if (appliedSpans.length < mToggles.length)
-				for (final ISpan mSpan : appliedSpans)
-					for (final ToggleButton mToggle : mToggles){
-
-						toggleType = ((Integer) mToggle.getTag()).intValue();
-						if (!mToggle.isChecked()
-							&& mSpan.getType() == toggleType)
-							mToggle.setChecked(true);
-					}
-			else
-				for (final ToggleButton mToggle : mToggles){
-
-					toggleType = ((Integer) mToggle.getTag()).intValue();
-					for (final ISpan mSpan : appliedSpans)
-						if (!mToggle.isChecked()
-							&& mSpan.getType() == toggleType)
-							mToggle.setChecked(true);
-				}
-
-		}
+		mToggles =
+					new ToggleButton[] { tgBold,
+										tgItalic,
+										tgUnderline,
+										tgStrikethrough,
+										tgBgColor,
+										tgFgColor };
 	}
 
 
@@ -1877,12 +1497,12 @@ public class RichEditText	extends
 				final String action = "";
 				String flag = "";
 
-				Log.i(	"EDITOR",
-						"Start: "
-							+ mSpan.getStartPosition());
-				Log.i(	"EDITOR",
-						"End: "
-							+ mSpan.getEndPosition());
+				// Log.i( "EDITOR",
+				// "Start: "
+				// + mSpan.getStartPosition());
+				// Log.i( "EDITOR",
+				// "End: "
+				// + mSpan.getEndPosition());
 				switch(mSpan.getType()){
 					case BOLD:
 						type = "Bold";
@@ -1946,12 +1566,12 @@ public class RichEditText	extends
 				final String action = "";
 				String flag = "";
 
-				Log.i(	"EDITOR",
-						"Start: "
-							+ mSpan.getStartPosition());
-				Log.i(	"EDITOR",
-						"End: "
-							+ mSpan.getEndPosition());
+				// Log.i( "EDITOR",
+				// "Start: "
+				// + mSpan.getStartPosition());
+				// Log.i( "EDITOR",
+				// "End: "
+				// + mSpan.getEndPosition());
 				switch(mSpan.getType()){
 					case BOLD:
 						type = "Bold";

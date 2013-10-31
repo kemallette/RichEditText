@@ -2,153 +2,69 @@ package com.kemallette.RichEditText.Text;
 
 
 import android.graphics.drawable.Drawable;
-import android.text.Editable;
-import android.text.Spanned;
 import android.text.style.ImageSpan;
-import android.util.Log;
 
 /**
- * Image is set by constructor and is immutable.
- * Have to create a new span and apply it to change the fgcolor
+ * Image is set by constructor and is immutable. Have to create a new span and
+ * apply it to change the fgcolor
  */
 
-public class ImgSpan extends ImageSpan implements ISpan{
-    
-    private int startPosition, endPosition, flag;
-    
+public class ImgSpan extends
+					ImageSpan	implements
+								ISpan{
 
-    public ImgSpan(final int startPostion, final int endPostion,
-        final int flag, Drawable image) {
+	private int	flag;
 
-        super(image); // Imgspan's constructor sets the image bitmap
-        
-        startPosition = startPostion;
-        endPosition = endPostion;
-        this.flag = flag;
-    }
-    
 
-    @Override
-    public void setSpan(final Editable e) {
+	public ImgSpan(
+					final int flag,
+					final Drawable image){
 
-        if (startPosition < 0)
-            startPosition = 0;
-        
-        if (!(e.length() < startPosition))
-            if (startPosition > endPosition)
-                Log.e("SPAN",
-                      "StartPosition was after End Position - couldn't set.");
-            else
-                e.setSpan(this, startPosition, endPosition, flag);
-        else
-            Log.e("SPAN",
-                  "DID NOT SET: Start position past EditText length.");
-    }
-    
+		super(image); // Imgspan's constructor sets the image bitmap
+		this.flag = flag;
+	}
 
-    @Override
-    public Drawable getDrawable() {
 
-        return super.getDrawable();
-    }
-    
+	@Override
+	public Drawable getDrawable(){
 
-    @Override
-    public String getSource() {
+		return super.getDrawable();
+	}
 
-        return super.getSource();
-    }
-    
 
-    @Override
-    public int getStartPosition() {
+	@Override
+	public String getSource(){
 
-        return startPosition;
-    }
-    
+		return super.getSource();
+	}
 
-    @Override
-    public int getEndPosition() {
 
-        return endPosition;
-    }
-    
+	@Override
+	public void setFlag(final int flag){
 
-    @Override
-    public void setStartPosition(final int startPos) {
+		this.flag = flag;
+	}
 
-        startPosition = startPos;
-        
-    }
-    
 
-    @Override
-    public void setEndPosition(final int endPos) {
+	@Override
+	public int getFlag(){
 
-        endPosition = endPos;
-    }
-    
+		return flag;
+	}
 
-    @Override
-    public void setFlag(final int flag) {
 
-        this.flag = flag;
-    }
-    
+	@Override
+	public void setType(final int type){
 
-    @Override
-    public int getFlag() {
+		// do nothing
+	}
 
-        return flag;
-    }
-    
 
-    @Override
-    public void setType(final int type) {
+	@Override
+	public int getType(){
 
-        // do nothing
-    }
-    
+		return IMAGE;
+	}
 
-    @Override
-    public int getType() {
 
-        return IMAGE;
-    }
-    
-
-    @Override
-    public boolean isStartInclusive() {
-
-        if (flag == Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-            || flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-            return true;
-        else
-            return false;
-    }
-    
-
-    @Override
-    public boolean isEndInclusive() {
-
-        if (flag == Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-            || flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-            return true;
-        else
-            return false;
-    }
-    
-
-    @Override
-    public void removeSpan(Editable text) {
-
-        text.removeSpan(this);
-    }
-    
-
-    @Override
-    public void dump() {
-
-        BaseSpan.dump(this);
-    }
 }

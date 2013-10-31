@@ -1,10 +1,8 @@
 package com.kemallette.RichEditText.Text;
 
 
-import android.text.Editable;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
-import android.util.Log;
 
 
 public class BulletListSpan	extends
@@ -12,75 +10,19 @@ public class BulletListSpan	extends
 										IParagraphSpan{
 
 
-	private boolean	isFirstBullet	= false;
-	private int		startPosition, endPosition, color;
-	private float	density;
+	private final boolean	isFirstBullet	= false;
+	private int				color;
+	private final float		density;
 
 
-	public BulletListSpan(	final int startPostion,
-							final int endPostion,
-							float density,
-							int color,
-							int gapWidth){
+	public BulletListSpan(	final int color,
+							final float density,
+							final int gapWidth){
 
 		super(	gapWidth,
 				color);
-
-		startPosition = startPostion;
-		endPosition = endPostion;
 		this.density = density;
 
-	}
-
-
-	@Override
-	public void setSpan(final Editable e){
-
-		if (startPosition < 0)
-			startPosition = 0;
-
-		if (!(e.length() < startPosition))
-			if (startPosition > endPosition)
-				Log.e(	"SPAN",
-						"StartPosition was after End Position - couldn't set.");
-			else
-				e.setSpan(	this,
-							startPosition,
-							endPosition,
-							Spanned.SPAN_PARAGRAPH);
-		else
-			Log.e(	"SPAN",
-					"DID NOT SET: Start position past EditText length.");
-
-	}
-
-
-	@Override
-	public int getStartPosition(){
-
-		return startPosition;
-	}
-
-
-	@Override
-	public int getEndPosition(){
-
-		return endPosition;
-	}
-
-
-	@Override
-	public void setStartPosition(final int startPos){
-
-		startPosition = startPos;
-
-	}
-
-
-	@Override
-	public void setEndPosition(final int endPos){
-
-		endPosition = endPos;
 	}
 
 
@@ -109,82 +51,6 @@ public class BulletListSpan	extends
 	public int getType(){
 
 		return SpanTypes.BULLET;
-	}
-
-
-	@Override
-	public void removeSpan(Editable text){
-
-		text.removeSpan(this);
-	}
-
-
-	/**
-	 * This will return the {@link Spanned} flag that describes start/end
-	 * behavior. This is much more informative than just knowing this is
-	 * Spanned.PARAGRAPH.
-	 * 
-	 * @param bufferEnd
-	 *            - the end position of the current buffer
-	 */
-	@Override
-	public int getFlagSynonym(int bufferEnd){
-
-		if (startPosition == bufferEnd
-			&& endPosition == bufferEnd)
-			return Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
-		else if (startPosition < endPosition
-					&& endPosition == bufferEnd)
-			return Spanned.SPAN_INCLUSIVE_INCLUSIVE;
-		else
-			return Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
-
-
-	}
-
-
-	@Override
-	public boolean isStartInclusive(int synonymFlag){
-
-		if (synonymFlag == Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-			|| synonymFlag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-			return true;
-		else
-			return false;
-	}
-
-
-	@Override
-	public boolean isEndInclusive(int synonymFlag){
-
-		if (synonymFlag == Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-			|| synonymFlag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-			return true;
-		else
-			return false;
-	}
-
-
-	@Override
-	public void dump(){
-
-		BaseSpan.dump(this);
-	}
-
-
-	@Override
-	public boolean isStartInclusive(){
-
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean isEndInclusive(){
-
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 

@@ -1,11 +1,8 @@
 package com.kemallette.RichEditText.Text;
 
 
-import android.text.Editable;
-import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 
 
 /**
@@ -17,8 +14,9 @@ public class TextForgroundColorSpan	extends
 														implements
 														ISpan{
 
-	private int			startPosition, endPosition, flag;
-	private TextPaint	mTextPaint;
+	private final int		startPosition, endPosition;
+	private int				flag;
+	private final TextPaint	mTextPaint;
 
 
 	public TextForgroundColorSpan(	final int startPostion,
@@ -36,67 +34,17 @@ public class TextForgroundColorSpan	extends
 	}
 
 
-	@Override
-	public void setSpan(final Editable e){
-
-		if (startPosition < 0)
-			startPosition = 0;
-
-		if (!(e.length() < startPosition))
-			if (startPosition > endPosition)
-				Log.e(	"SPAN",
-						"StartPosition was after End Position - couldn't set.");
-			else
-				e.setSpan(	this,
-							startPosition,
-							endPosition,
-							flag);
-		else
-			Log.e(	"SPAN",
-					"DID NOT SET: Start position past EditText length.");
-	}
-
-
 	public int getColor(){
 
 		return super.getForegroundColor();
 	}
 
 
-	public void setColor(int color){
+	public void setColor(final int color){
 
 		mTextPaint.bgColor = color;
 		updateDrawState(mTextPaint);
 		super.updateDrawState(mTextPaint);
-	}
-
-
-	@Override
-	public int getStartPosition(){
-
-		return startPosition;
-	}
-
-
-	@Override
-	public int getEndPosition(){
-
-		return endPosition;
-	}
-
-
-	@Override
-	public void setStartPosition(final int startPos){
-
-		startPosition = startPos;
-
-	}
-
-
-	@Override
-	public void setEndPosition(final int endPos){
-
-		endPosition = endPos;
 	}
 
 
@@ -125,42 +73,6 @@ public class TextForgroundColorSpan	extends
 	public int getType(){
 
 		return FOREGROUND_COLOR;
-	}
-
-
-	@Override
-	public boolean isStartInclusive(){
-
-		if (flag == Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-			|| flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-			return true;
-		else
-			return false;
-	}
-
-
-	@Override
-	public boolean isEndInclusive(){
-
-		if (flag == Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-			|| flag == Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-			return true;
-		else
-			return false;
-	}
-
-
-	@Override
-	public void removeSpan(Editable text){
-
-		text.removeSpan(this);
-	}
-
-
-	@Override
-	public void dump(){
-
-		BaseSpan.dump(this);
 	}
 
 

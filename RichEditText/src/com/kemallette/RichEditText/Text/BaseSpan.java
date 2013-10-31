@@ -4,86 +4,27 @@
 package com.kemallette.RichEditText.Text;
 
 
-import android.text.Editable;
 import android.text.Spanned;
 import android.util.Log;
 
 public abstract class BaseSpan	implements
-							ISpan{
+								ISpan{
 
 
-	int	startPosition, endPosition, type,
+	int	type,
 		flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 
 
-	public BaseSpan(final int startPosition,
-				final int endPosition,
-				final int type,
-				final int flag){
+	public BaseSpan(final int type,
+					final int flag){
 
-		this.startPosition = startPosition;
-		this.endPosition = endPosition;
 		this.type = type;
 		this.flag = flag;
 	}
 
 
-	public static void setSpan(final Object span,
-								final Editable e,
-								int startPosition,
-								int endPosition,
-								int flag){
-
-		if (startPosition < 0)
-			startPosition = 0;
-
-		if (!(e.length() < startPosition))
-			if (startPosition > endPosition)
-				Log.e(	"SPAN",
-						"StartPosition was after End Position - couldn't set.");
-			else
-				e.setSpan(	span,
-							startPosition,
-							endPosition,
-							flag);
-		else
-			Log.e(	"SPAN",
-					"DID NOT SET: Start position past EditText length.");
-
-	}
-
-
 	@Override
-	public int getStartPosition(){
-
-		return startPosition;
-	}
-
-
-	@Override
-	public int getEndPosition(){
-
-		return endPosition;
-	}
-
-
-	@Override
-	public void setStartPosition(int startPos){
-
-		this.startPosition = startPos;
-
-	}
-
-
-	@Override
-	public void setEndPosition(int endPos){
-
-		this.endPosition = endPos;
-	}
-
-
-	@Override
-	public void setFlag(int flag){
+	public void setFlag(final int flag){
 
 		this.flag = flag;
 	}
@@ -97,7 +38,7 @@ public abstract class BaseSpan	implements
 
 
 	@Override
-	public void setType(int type){
+	public void setType(final int type){
 
 		this.type = type;
 	}
@@ -115,18 +56,18 @@ public abstract class BaseSpan	implements
 	 * DEBUG
 	 * 
 	 ************************************************************/
-	public static void dump(ISpan mSpan){
+	public static void dump(final ISpan mSpan){
 
 		String type = null, flag = null;
 
 		Log.i(	"EDITOR",
 				"\n\n----------------------------\n");
-		Log.i(	"EDITOR",
-				"Start: "
-					+ mSpan.getStartPosition());
-		Log.i(	"EDITOR",
-				"End: "
-					+ mSpan.getEndPosition());
+		// Log.i( "EDITOR",
+		// "Start: "
+		// + mSpan.getStartPosition());
+		// Log.i( "EDITOR",
+		// "End: "
+		// + mSpan.getEndPosition());
 		switch(mSpan.getType()){
 			case BOLD:
 				type = "Bold";

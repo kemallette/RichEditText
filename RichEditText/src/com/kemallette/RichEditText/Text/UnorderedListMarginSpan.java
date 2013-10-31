@@ -1,9 +1,7 @@
 package com.kemallette.RichEditText.Text;
 
 
-import android.text.Editable;
 import android.text.Spanned;
-import android.util.Log;
 
 
 public class UnorderedListMarginSpan extends
@@ -11,16 +9,16 @@ public class UnorderedListMarginSpan extends
 												implements
 												IParagraphSpan{
 
-	float	density;
-	private int	startPosition, endPosition, marginSizeFirst,
-				marginSizeRest;
+	float				density;
+	private final int	marginSizeFirst;
+	private final int	marginSizeRest;
 
 
-	public UnorderedListMarginSpan(	int start,
-									int end,
-									float density,
-									int marginSizeFirst,
-									int marginSizeRest){
+	public UnorderedListMarginSpan(	final int start,
+									final int end,
+									final float density,
+									final int marginSizeFirst,
+									final int marginSizeRest){
 
 		super(	marginSizeFirst,
 				marginSizeRest);
@@ -32,7 +30,7 @@ public class UnorderedListMarginSpan extends
 
 
 	@Override
-	public int getLeadingMargin(boolean first){
+	public int getLeadingMargin(final boolean first){
 
 		if (first)
 			return (int) density
@@ -44,54 +42,7 @@ public class UnorderedListMarginSpan extends
 
 
 	@Override
-	public void setSpan(Editable e){
-
-		if (startPosition < 0)
-			startPosition = 0;
-
-		if (startPosition > endPosition)
-			Log.e(	"SPAN",
-					"StartPosition was after End Position - couldn't set.");
-		else
-			BaseSpan.setSpan(	this,
-								e,
-								startPosition,
-								endPosition,
-								Spanned.SPAN_PARAGRAPH);
-	}
-
-
-	@Override
-	public int getStartPosition(){
-
-		return startPosition;
-	}
-
-
-	@Override
-	public int getEndPosition(){
-
-		return endPosition;
-	}
-
-
-	@Override
-	public void setStartPosition(int startPos){
-
-		this.startPosition = startPos;
-
-	}
-
-
-	@Override
-	public void setEndPosition(int endPos){
-
-		this.endPosition = endPos;
-	}
-
-
-	@Override
-	public void setFlag(int flag){
+	public void setFlag(final int flag){
 
 
 	}
@@ -106,7 +57,7 @@ public class UnorderedListMarginSpan extends
 
 
 	@Override
-	public void setType(int type){
+	public void setType(final int type){
 
 
 	}
@@ -116,60 +67,6 @@ public class UnorderedListMarginSpan extends
 	public int getType(){
 
 		return SpanTypes.LEADING_MARGIN_UL;
-	}
-
-
-	@Override
-	public void removeSpan(Editable text){
-
-		text.removeSpan(this);
-	}
-
-
-	@Override
-	public int getFlagSynonym(int bufferEnd){
-
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public boolean isStartInclusive(int synonymFlag){
-
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean isEndInclusive(int synonymFlag){
-
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void dump(){
-
-		BaseSpan.dump(this);
-	}
-
-
-	@Override
-	public boolean isStartInclusive(){
-
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean isEndInclusive(){
-
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 
